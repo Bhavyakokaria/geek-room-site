@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.1",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/interaction-external-bubble": "^3.9.1",
     "@tsparticles/interaction-external-repulse": "^3.9.1",

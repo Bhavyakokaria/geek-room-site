@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useUser, UserButton } from "@clerk/nextjs";
 
 const navLinks = [
   { href: "/", label: "Origin" },
@@ -10,15 +11,21 @@ const navLinks = [
   { href: "/team", label: "Team" },
   { href: "/events", label: "Events" },
   { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
   { href: "/gallery", label: "Gallery" },
   { href: "/join", label: "Join" },
-  { href: "/contact", label: "Terminal" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
-export function Header() {
+export function Header({ hideJoin }: { hideJoin?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { user, isLoaded, isSignedIn } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin";
+
+  const displayedLinks = navLinks.filter(link => !(hideJoin && link.href === "/join"));
+  const allLinks = isAdmin 
+    ? [...displayedLinks, { href: "/admin", label: "Admin" }]
+    : displayedLinks;
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 supports-[padding:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] pointer-events-none">
@@ -36,7 +43,7 @@ export function Header() {
         <ul className="hidden md:flex md:items-center">
           <li>
             <ul className="flex items-center gap-1 rounded-full border border-white/5 bg-[#050505]/60 backdrop-blur-xl px-4 py-2 sm:gap-2 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-              {navLinks.map(({ href, label }) => {
+              {allLinks.map(({ href, label }) => {
                 const isActive = pathname === href;
                 return (
                   <li key={href}>
@@ -55,6 +62,21 @@ export function Header() {
               })}
             </ul>
           </li>
+          {isLoaded && isSignedIn && (
+            <li className="ml-4 pointer-events-auto flex items-center">
+              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-9 h-9 border border-white/10" } }} />
+            </li>
+          )}
+          {isLoaded && !isSignedIn && (
+            <li className="ml-4 pointer-events-auto">
+              <Link
+                href="/sign-in"
+                className="relative inline-flex h-9 items-center justify-center rounded-full bg-[#00F2FF]/10 px-4 text-sm font-medium text-[#00F2FF] border border-[#00F2FF]/20 transition-all hover:bg-[#00F2FF]/20 hover:shadow-[0_0_15px_rgba(0,242,255,0.3)]"
+              >
+                System Login
+              </Link>
+            </li>
+          )}
         </ul>
 
         {/* Mobile menu button */}
@@ -95,7 +117,7 @@ export function Header() {
         aria-hidden={!menuOpen}
       >
         <ul className="flex flex-col px-2 py-4 gap-1">
-          {navLinks.map(({ href, label }) => {
+          {allLinks.map(({ href, label }) => {
             const isActive = pathname === href;
             return (
               <li key={href}>
@@ -113,6 +135,22 @@ export function Header() {
               </li>
             );
           })}
+          {isLoaded && isSignedIn && (
+            <li className="mt-2 text-center pointer-events-auto flex justify-center">
+              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-10 h-10 border border-white/10" } }} />
+            </li>
+          )}
+          {isLoaded && !isSignedIn && (
+            <li className="mt-2 text-center pointer-events-auto flex justify-center">
+              <Link
+                href="/sign-in"
+                className="w-full max-w-[200px] relative inline-flex h-10 items-center justify-center rounded-xl bg-[#00F2FF]/10 px-4 text-base font-medium text-[#00F2FF] border border-[#00F2FF]/20 transition-all hover:bg-[#00F2FF]/20"
+                onClick={() => setMenuOpen(false)}
+              >
+                System Login
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </header>

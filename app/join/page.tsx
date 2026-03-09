@@ -1,11 +1,32 @@
 import type { Metadata } from "next";
+import { getSettings } from "@/app/actions/settings";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Join Us — GEEKROOM JIMSEMTC",
   description: "Join GEEKROOM JIMSEMTC. Recruitment form and membership info.",
 };
 
-export default function JoinPage() {
+export default async function JoinPage() {
+  const settings = await getSettings();
+
+  if (settings.hideJoin) {
+    return (
+      <main className="text-center min-h-[60vh] flex flex-col justify-center items-center px-4">
+        <h1 className="text-3xl font-bold sm:text-4xl text-[#00F2FF]">RECRUITMENT CLOSED</h1>
+        <p className="mt-4 text-[#ededed]/70 max-w-md">
+          The intake system is currently offline. We are not accepting new members at this time.
+        </p>
+        <Link 
+          href="/" 
+          className="mt-8 px-6 py-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors text-sm"
+        >
+          RETURN TO ORIGIN
+        </Link>
+      </main>
+    );
+  }
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">Join Us</h1>

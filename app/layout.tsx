@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ClerkProvider } from "@clerk/nextjs";
+import { getSettings } from "@/app/actions/settings";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,20 +28,24 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
+
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
-      >
-        <Header />
-        <div className="flex-1">{children}</div>
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
+        >
+          <Header hideJoin={settings.hideJoin} />
+          <div className="flex-1">{children}</div>
+          <Footer hideJoin={settings.hideJoin} />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

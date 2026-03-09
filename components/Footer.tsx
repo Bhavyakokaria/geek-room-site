@@ -5,13 +5,12 @@ const navLinks = [
   { href: "/team", label: "Team" },
   { href: "/events", label: "Events" },
   { href: "/projects", label: "System Nodes" },
-  { href: "/blog", label: "Logs" },
   { href: "/gallery", label: "Gallery" },
   { href: "/join", label: "Initialize" },
-  { href: "/contact", label: "Comm-Link" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
-export function Footer() {
+export function Footer({ hideJoin }: { hideJoin?: boolean }) {
   return (
     <footer className="relative mt-auto border-t border-[#FF8C00]/20 bg-[#050505]/90 py-8 backdrop-blur-xl z-10 w-full overflow-hidden">
       {/* Circuit board subtle glow */}
@@ -29,7 +28,7 @@ export function Footer() {
         </Link>
         
         <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-          {navLinks.map(({ href, label }) => (
+          {navLinks.filter(link => !(hideJoin && link.href === "/join")).map(({ href, label }) => (
             <li key={href}>
               <Link
                 href={href}
@@ -42,7 +41,7 @@ export function Footer() {
         </ul>
         
         <span className="text-xs font-mono text-gray-600 transition-colors hover:text-[#FF8C00]">
-          © {new Date().getFullYear()} CORE LOGIC
+          © GEEKROOM {new Date().getFullYear()}
         </span>
       </div>
     </footer>
