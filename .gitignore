@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI assistant data
+.claude/
+MEMORY.md
+*.md.bak
+
+# External reference folders (not part of project)
+# These folders are for reference only and should not be copied to the repo:
+# geek veek, geek veek 2.0, hackquanta, hackforce, aptiverse, BlockGen
+# Images are located in public/images/events/

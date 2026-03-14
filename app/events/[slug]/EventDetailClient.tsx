@@ -1,327 +1,451 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { EventDetails, WinnerTeam } from "../data";
-import { Calendar, MapPin, Clock, Trophy, Users, ArrowRight, ChevronDown } from "lucide-react";
+import { EventDetails, Winner } from "../data";
+import { Calendar, MapPin, Clock, Trophy, Users, ArrowRight, ChevronDown, Share2 } from "lucide-react";
 import GallerySlideshow from "./GallerySlideshow";
+import MediaArchive from "@/components/MediaArchive";
+import GallerySection from "@/components/GallerySection";
 
-function WinnerTeamAccordion({ team, label, dotColor, position }: { team: WinnerTeam; label: string; dotColor: string; position: number }) {
-  const [isOpen, setIsOpen] = useState(false);
+// Winner Team Card
+const WinnerTeamCard = ({ team, index }: { team: Winner; index: number }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const rankConfig: Record<string, { label: string; color: string; badge: string; icon: string }> = {
+    "1st": {
+      label: "CHAMPION",
+      color: "from-yellow-400/20 to-yellow-600/10 border-yellow-400/30",
+      badge: "bg-yellow-500 text-yellow-900",
+      icon: "🏆"
+    },
+    "2nd": {
+      label: "1ST RUNNER UP",
+      color: "from-slate-300/20 to-slate-400/10 border-slate-300/30",
+      badge: "bg-slate-300 text-slate-700",
+      icon: "🥈"
+    },
+    "3rd": {
+      label: "2ND RUNNER UP",
+      color: "from-amber-600/20 to-amber-700/10 border-amber-600/30",
+      badge: "bg-amber-600 text-amber-100",
+      icon: "🥉"
+    },
+    "Champions": {
+      label: "CHAMPIONS",
+      color: "from-yellow-400/20 to-yellow-600/10 border-yellow-400/30",
+      badge: "bg-yellow-500 text-yellow-900",
+      icon: "🏆"
+    }
+  };
+
+  const config = rankConfig[team.rank] || {
+    label: `${team.rank}`,
+    color: "from-foreground/10 to-transparent border-foreground/20",
+    badge: "bg-foreground/20 text-foreground",
+    icon: "🎖️"
+  };
 
   return (
-    <li className="flex flex-col rounded-xl bg-background border border-foreground/10 shadow-sm transition hover:shadow-md hover:border-foreground/20 overflow-hidden">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left flex flex-col gap-1.5 p-3 focus:outline-none focus:bg-foreground/5 transition-colors"
+    <motion.li
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${config.color} border backdrop-blur-sm`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+    >
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full text-left p-5 transition-colors hover:bg-white/5"
       >
-        <div className="flex justify-between items-center w-full">
-          <span className="text-xs font-bold uppercase tracking-wider text-foreground/50">{label}</span>
-          <ChevronDown className={`h-4 w-4 text-foreground/50 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
-        </div>
-        <div className="flex items-center gap-3 mt-1">
-          <span className={`flex h-8 w-8 items-center justify-center shrink-0 rounded-full text-sm font-bold ${dotColor}`}>
-            {position}
-          </span>
-          <div>
-            <span className="font-semibold text-lg block">{team.leader}</span>
-            {team.teamName && (
-              <span className="text-xs text-foreground/60 font-medium">Team: {team.teamName}</span>
+        <div className="flex items-start gap-4">
+          {/* Position Badge */}
+          <motion.div
+            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-2xl ${config.badge} font-black shadow-lg`}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+          >
+            {config.icon}
+          </motion.div>
+
+          {/* Team Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">
+                {config.label}
+              </span>
+              <motion.div
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="h-5 w-5 text-white/40" />
+              </motion.div>
+            </div>
+
+            <h4 className="text-lg md:text-xl font-black text-white break-words">
+              {team.teamName}
+            </h4>
+
+            {team.banner && (
+              <img src={team.banner} alt={`${team.rank} banner`} className="mt-3 w-full rounded-lg" />
             )}
           </div>
         </div>
       </button>
 
+      {/* Expandable Details */}
       <AnimatePresence>
-        {isOpen && (
+        {isExpanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden bg-foreground/5 border-t border-foreground/5"
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden border-t border-white/10 bg-white/[0.02]"
           >
-            <div className="p-4 py-3">
-              <h5 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-2">Team Members</h5>
-              <ul className="space-y-2">
-                {team.members.map((member, i) => (
-                  <li key={i} className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-foreground/80">{member.name}</span>
-                    {member.name === team.leader && <span className="text-[10px] bg-foreground/10 px-2 py-0.5 rounded-full font-bold">LEADER</span>}
-                    {member.role && member.name !== team.leader && <span className="text-xs text-foreground/50">{member.role}</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </li>
-  );
-}
-
-function GalleryGrid({ images }: { images: string[] }) {
-  const [showAll, setShowAll] = useState(false);
-  
-  if (!images || images.length === 0) return null;
-  if (images.length === 1) {
-    return (
-      <div className="relative aspect-[21/9] w-full rounded-2xl overflow-hidden border border-foreground/10">
-        <img src={images[0]} alt="Gallery image" className="w-full h-full object-cover" />
-      </div>
-    );
-  }
-
-  const remainingCount = images.length - 1;
-
-  return (
-    <div className="space-y-4">
-      <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        
-        <motion.div 
-          layout
-          className="relative aspect-video rounded-2xl overflow-hidden border border-foreground/10"
-        >
-          <img src={images[0]} alt="Gallery main image" className="w-full h-full object-cover" />
-        </motion.div>
-
-        
-        <AnimatePresence mode="popLayout">
-          {!showAll ? (
-            
-            <motion.div
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              whileHover={{ scale: 1.02 }}
-              onClick={() => setShowAll(true)}
-              className="relative aspect-video cursor-pointer select-none group"
-            >
-              
-              <div className="absolute inset-2 -top-2 rounded-2xl bg-foreground/5 border border-foreground/10 transition-transform group-hover:-translate-y-1 rotate-2" />
-              <div className="absolute inset-1 w-[98%] left-1 rounded-2xl bg-foreground/10 border border-foreground/10 transition-transform group-hover:-translate-y-2 -rotate-1" />
-              
-              
-              <div className="absolute inset-0 rounded-2xl overflow-hidden border border-foreground/20 shadow-lg text-foreground bg-background">
-                <img src={images[1]} alt="Gallery preview" className="w-full h-full object-cover opacity-50 transition-opacity group-hover:opacity-40" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/40 backdrop-blur-[2px]">
-                  <span className="text-3xl font-extrabold shadow-sm">+{remainingCount}</span>
-                  <span className="text-sm font-semibold uppercase tracking-wider mt-1 opacity-80">More Photos</span>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            
-            images.slice(1).map((img, idx) => (
-              <motion.div 
-                key={img}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className="relative aspect-video rounded-xl overflow-hidden border border-foreground/10"
-              >
-                <img src={img} alt={`Gallery image ${idx + 2}`} className="w-full h-full object-cover" />
-              </motion.div>
-            ))
-          )}
-        </AnimatePresence>
-      </motion.div>
-      
-      
-      <AnimatePresence>
-        {showAll && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="flex justify-center pt-4 overflow-hidden"
-          >
-            <button
-              onClick={() => setShowAll(false)}
-              className="group flex items-center gap-2 rounded-full border border-foreground/20 bg-background px-6 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-foreground hover:text-background"
-            >
-              Show Less
-              <ChevronDown className="h-4 w-4 rotate-180 transition-transform duration-300" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-export default function EventDetailClient({ event }: { event: EventDetails }) {
-  const isPast = event.type === "past";
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
-  return (
-    <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <Link
-        href="/events"
-        className="inline-flex min-h-[44px] items-center text-sm font-medium text-foreground/70 hover:text-foreground transition-colors mb-6"
-      >
-        ← Back to Events
-      </Link>
-
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-12"
-      >
-        
-        <motion.div variants={itemVariants} className="space-y-6 text-center">
-          <div className="inline-block rounded-full bg-foreground/10 px-3 py-1 text-sm font-semibold capitalize text-foreground/80 mb-4">
-            {event.type} Event
-          </div>
-          <h1 className="text-4xl font-extrabold sm:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60 tracking-tight">
-            {event.title}
-          </h1>
-          
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-foreground/70 font-medium">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              <span>{new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-            </div>
-            {event.time && (
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                <span>{event.time}</span>
-              </div>
-            )}
-            {event.location && (
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                <span>{event.location}</span>
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        
-        {((isPast && event.gallery && event.gallery.length > 0) || event.image) && (
-          <motion.div variants={itemVariants} className="relative aspect-video w-full overflow-hidden rounded-3xl border border-foreground/10 shadow-2xl">
-            {isPast && event.gallery && event.gallery.length > 0 ? (
-              <GallerySlideshow images={event.image ? [event.image, ...event.gallery] : event.gallery} />
-            ) : (
-              <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent pointer-events-none" />
-          </motion.div>
-        )}
-
-        <div className="grid gap-12 md:grid-cols-3">
-          
-          <motion.div variants={itemVariants} className="md:col-span-2 space-y-6">
-            <h2 className="text-2xl font-bold">About this event</h2>
-            <p className="text-lg text-foreground/80 leading-relaxed whitespace-pre-wrap">
-              {event.description}
-            </p>
-            
-            
-            {isPast && event.gallery && event.gallery.length > 0 && (
-              <div className="mt-12 space-y-6">
-                <h2 className="text-2xl font-bold">Event Gallery</h2>
-                <GalleryGrid images={event.gallery} />
-              </div>
-            )}
-          </motion.div>
-
-          
-          <motion.div variants={itemVariants} className="space-y-6">
-            <div className="rounded-2xl border border-foreground/10 bg-foreground/5 p-6 backdrop-blur-sm">
-              <h3 className="text-xl font-semibold flex items-center gap-2 mb-6">
-                {isPast ? <Trophy className="h-5 w-5 text-yellow-500" /> : <Users className="h-5 w-5" />}
-                {isPast ? "Event Highlights" : "Registration"}
-              </h3>
-              
-              {isPast ? (
-                <div className="space-y-4">
-                  {event.winners && event.winners.length > 0 ? (
-                    <div>
-                      <h4 className="font-medium text-foreground/80 mb-2">Winners</h4>
-                      <ul className="space-y-4">
-                        {event.winners.map((team, idx) => {
-                          const labels = ["Winner", "1st Runner Up", "2nd Runner Up"];
-                          const label = labels[idx] || `Position ${idx + 1}`;
-                          
-                          
-                          const colors = [
-                            "bg-yellow-500/20 text-yellow-600 dark:text-yellow-500", 
-                            "bg-slate-300/50 text-slate-700 dark:text-slate-300",    
-                            "bg-amber-600/20 text-amber-700 dark:text-amber-500"     
-                          ];
-                          const dotColor = colors[idx] || "bg-foreground/10 text-foreground";
-
-                          return (
-                            <WinnerTeamAccordion 
-                              key={idx} 
-                              team={team} 
-                              label={label} 
-                              dotColor={dotColor} 
-                              position={idx + 1} 
-                            />
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-foreground/70">A fantastic event successfully concluded.</p>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <p className="text-sm text-foreground/70">
-                    Secure your spot now! Space is limited and spots are filling up fast.
-                  </p>
-                  
-                  {event.registrationLink && (
-                    <motion.a
-                      href={event.registrationLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-3 font-semibold text-background transition-colors hover:bg-foreground/90 overflow-hidden"
-                    >
-                      <span className="relative z-10 flex items-center gap-2">
-                        Register Now
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </span>
-                      
-                      <motion.div 
-                        className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-background/20 to-transparent"
-                        initial={{ x: "-100%" }}
-                        animate={{ x: "200%" }}
-                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", repeatDelay: 1 }}
-                      />
-                    </motion.a>
-                  )}
+            <div className="p-5">
+              {team.photo && (
+                <img src={team.photo} alt={`${team.rank} winner photo`} className="w-full rounded-lg mb-4" />
+              )}
+              {team.members && team.members.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-[#00F2FF]" />
+                  <span className="text-sm font-medium text-white/80">
+                    {team.members.join(" • ")}
+                  </span>
                 </div>
               )}
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.li>
+  );
+};
+
+// Countdown Timer for Upcoming Events
+const CountdownTimer = ({ date, time }: { date: string; time?: string }) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const targetDate = new Date(`${date} ${time || "00:00"}`);
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
+
+      if (diff > 0) {
+        setTimeLeft({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000)
+        });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [date, time]);
+
+  const timeUnit = (value: number, label: string) => (
+    <div className="flex flex-col items-center">
+      <motion.span
+        key={value}
+        initial={{ scale: 1.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="text-3xl md:text-4xl font-black text-white tabular-nums"
+      >
+        {String(value).padStart(2, '0')}
+      </motion.span>
+      <span className="text-xs font-bold uppercase tracking-widest text-white/50 mt-1">{label}</span>
+    </div>
+  );
+
+  return (
+    <div className="flex gap-4 md:gap-8 justify-center">
+      {timeUnit(timeLeft.days, "Days")}
+      {timeUnit(timeLeft.hours, "Hours")}
+      {timeUnit(timeLeft.minutes, "Mins")}
+      {timeUnit(timeLeft.seconds, "Secs")}
+    </div>
+  );
+};
+
+export default function EventDetailClient({ event }: { event: EventDetails }) {
+  const isPast = event.type === "past";
+  const eventDate = new Date(event.date);
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  return (
+    <main className="relative min-h-screen">
+      {/* Back Navigation */}
+      <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/10">
+        <div className="mx-auto max-w-6xl px-4 py-4">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white/70 hover:text-[#00F2FF] transition-colors"
+          >
+            <motion.span
+              className="flex items-center gap-2"
+              whileHover={{ x: -5 }}
+            >
+              <ArrowRight className="h-4 w-4 rotate-180" />
+              Back to Events
+            </motion.span>
+          </Link>
         </div>
-      </motion.div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 py-8 md:py-12">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-12"
+        >
+          {/* Hero Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center space-y-8"
+          >
+            {/* Title */}
+            <div>
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="inline-flex items-center gap-2 rounded-full bg-[#00F2FF]/10 border border-[#00F2FF]/30 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-[#00F2FF]"
+              >
+                <span className="h-2 w-2 rounded-full bg-[#00F2FF] animate-pulse" />
+                {isPast ? "Past Event" : "Upcoming Event"}
+              </motion.span>
+
+              <h1 className="mt-6 text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight tracking-tight">
+                {event.title}
+              </h1>
+            </div>
+
+            {/* Event Meta */}
+            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#00F2FF]/10 border border-[#00F2FF]/30">
+                  <Calendar className="h-5 w-5 text-[#00F2FF]" />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-bold uppercase tracking-widest text-white/50">Date</p>
+                  <p className="text-lg font-semibold text-white">{formatDate(eventDate)}</p>
+                </div>
+              </div>
+
+              {event.time && (
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF8C00]/10 border border-[#FF8C00]/30">
+                    <Clock className="h-5 w-5 text-[#FF8C00]" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-bold uppercase tracking-widest text-white/50">Time</p>
+                    <p className="text-lg font-semibold text-white">{event.time}</p>
+                  </div>
+                </div>
+              )}
+
+              {event.location && (
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 border border-purple-500/30">
+                    <MapPin className="h-5 w-5 text-purple-400" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-bold uppercase tracking-widest text-white/50">Location</p>
+                    <p className="text-lg font-semibold text-white truncate max-w-[200px]">{event.location}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Countdown for upcoming events */}
+            {!isPast && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="pt-8"
+              >
+                <p className="text-sm font-bold uppercase tracking-widest text-white/50 mb-4">Event Starts In</p>
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 blur-xl bg-[#00F2FF]/20" />
+                    <div className="relative flex gap-6 md:gap-10 bg-[#0a0a0a] border border-white/10 rounded-2xl px-8 md:px-12 py-6">
+                      <CountdownTimer date={event.date} time={event.time} />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </motion.div>
+
+          {/* Main Image / Gallery */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="relative aspect-video md:aspect-[21/9] w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl"
+          >
+            {(isPast && event.gallery && event.gallery.length > 0) ? (
+              <GallerySlideshow images={event.image ? [event.image, ...event.gallery] : event.gallery} />
+            ) : event.image ? (
+              <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00F2FF]/10 via-[#0a0a0a] to-[#FF8C00]/10" />
+            )}
+
+            {/* Gradient overlay at bottom */}
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
+          </motion.div>
+
+          {/* Main Content */}
+          <div className="grid gap-12 lg:grid-cols-3">
+            {/* Left Column */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="lg:col-span-2 space-y-12"
+            >
+              {/* About Section */}
+              <section>
+                <h2 className="text-2xl md:text-3xl font-black mb-6 flex items-center gap-3 text-white">
+                  <span className="h-1 w-8 bg-gradient-to-r from-[#00F2FF] to-[#FF8C00]" />
+                  About This Event
+                </h2>
+                <p className="text-lg md:text-xl text-white/80 leading-relaxed whitespace-pre-wrap font-medium">
+                  {event.description}
+                </p>
+              </section>
+
+              {/* Gallery Section for past events */}
+              {isPast && event.gallery && event.gallery.length > 0 && (
+                <GallerySection images={event.gallery} />
+              )}
+
+              {/* Event Sections for past events */}
+              {isPast && event.sections && (
+                <>
+                  {event.sections
+                    .filter(s => s.type === "main" || s.type === "sub" || s.type === "winners")
+                    .map((section, idx) => (
+                      <GallerySection key={idx} images={section.images} title={section.title} />
+                  ))}
+                </>
+              )}
+            </motion.div>
+
+            {/* Right Column */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+              className="space-y-8"
+            >
+              {/* Action Card */}
+              <div className="sticky top-24 rounded-3xl bg-gradient-to-b from-[#0d0d0d] to-[#080808] border border-white/10 p-6 md:p-8 shadow-xl">
+                {isPast ? (
+                  <>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20 border border-yellow-500/30">
+                        <Trophy className="h-6 w-6 text-yellow-500" />
+                      </div>
+                      <h3 className="text-xl font-black uppercase tracking-wider text-white">Event Highlights</h3>
+                    </div>
+
+                    {event.winners && event.winners.length > 0 ? (
+                      <div>
+                        <p className="text-white/60 mb-6">Congratulations to our winners!</p>
+                        <ul className="space-y-4">
+                          {event.winners.map((team, idx) => (
+                            <WinnerTeamCard key={idx} team={team} index={idx} />
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Trophy className="h-16 w-16 mx-auto mb-4 text-white/20" />
+                        <p className="text-white/60">A fantastic event brought to you by GeekRoom JEMTEC!</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#00F2FF]/20 border border-[#00F2FF]/30">
+                        <Users className="h-6 w-6 text-[#00F2FF]" />
+                      </div>
+                      <h3 className="text-xl font-black uppercase tracking-wider text-white">Register Now</h3>
+                    </div>
+
+                    <p className="text-white/60 mb-8">
+                      Secure your spot! Limited seats available. Don't miss this opportunity to learn, network, and grow.
+                    </p>
+
+                    {event.registrationLink ? (
+                      <motion.a
+                        href={event.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="group relative flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#00F2FF] to-[#00F2FF]/80 px-6 py-4 font-black uppercase tracking-wider text-black text-lg transition-all hover:shadow-[0_0_40px_rgba(0,242,255,0.4)]"
+                      >
+                        <span>Register</span>
+                        <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
+                        {/* Shine effect */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                          initial={{ x: "-100%" }}
+                          animate={{ x: "100%" }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        />
+                      </motion.a>
+                    ) : (
+                      <div className="text-center py-6 text-white/50">
+                        Registration coming soon!
+                      </div>
+                    )}
+
+                    <div className="mt-6 flex items-center justify-center gap-4 text-white/40">
+                      <Share2 className="h-5 w-5" />
+                      <span className="text-sm">Share this event</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Media Archive Section */}
+        {event.sections && event.sections.some(s => s.type === "media-archive") && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-12"
+          >
+            {event.sections.filter(s => s.type === "media-archive").map((section, idx) => (
+              <MediaArchive key={idx} images={section.images} />
+            ))}
+          </motion.div>
+        )}
+      </div>
     </main>
   );
 }

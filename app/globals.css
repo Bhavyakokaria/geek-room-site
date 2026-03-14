@@ -30,14 +30,14 @@ html, body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #050505; 
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #222; 
+  background: #222;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #333; 
+  background: #333;
 }
 
 /* Minimum touch target 44x44px for interactive elements */
