@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { eventsData } from "../data";
+import { getEvents } from "@/app/actions/eventActions";
 import EventDetailClient from "./EventDetailClient";
+import { EventDetails } from "../data";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const event = eventsData.find((e) => e.slug === slug);
+  const customEvents = await getEvents();
+  const event = customEvents.find((e) => e.id === slug);
   if (!event) return { title: "Event — GeekRoom JEMTEC" };
 
   return {
@@ -18,9 +20,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EventDetailPage({ params }: Props) {
   const { slug } = await params;
-  const event = eventsData.find((e) => e.slug === slug);
+  const customEvents = await getEvents();
+  const rawEvent = customEvents.find((e) => e.id === slug);
 
-  if (!event) notFound();
+  if (!rawEvent) notFound();
+
+  const event: EventDetails = {
+    slug: rawEvent.id,
+    title: rawEvent.title,
+    date: rawEvent.date,
+    type: rawEvent.status,
+    description: rawEvent.description,
+    image: rawEvent.image,
+    registrationLink: rawEvent.registrationLink,
+    location: rawEvent.location,
+    time: rawEvent.time,
+    category: rawEvent.category as any || "tech-fest",
+    registrationOpen: rawEvent.registrationOpen,
+    gallery: rawEvent.gallery,
+    winners: rawEvent.winners
+  };
 
   return <EventDetailClient event={event} />;
 }

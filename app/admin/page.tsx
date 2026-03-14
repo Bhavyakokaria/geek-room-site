@@ -3,6 +3,7 @@ import { getSettings } from "@/app/actions/settings";
 import { AdminControls } from "./AdminControls";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Admin — GEEKROOM",
@@ -31,10 +32,21 @@ export default async function AdminPage() {
         {/* Toggle Controls */}
         <AdminControls initialHideJoin={settings.hideJoin} />
 
-        <div className="rounded-lg border border-foreground/10 p-5 sm:p-6">
-          <h3 className="font-semibold">Events</h3>
-          <p className="mt-1 text-sm text-foreground/70">Manage events and workshops.</p>
-        </div>
+          <Link
+            href="/admin/events"
+            className="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 hover:border-blue-500 transition-colors group cursor-pointer"
+          >
+            <h2 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Event Management</h2>
+            <p className="text-zinc-400 text-sm">Create, edit, and manage upcoming and past events.</p>
+          </Link>
+
+          <Link
+            href="/admin/gallery"
+            className="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 hover:border-[#FF8C00] transition-colors group cursor-pointer"
+          >
+            <h2 className="text-xl font-bold mb-2 group-hover:text-[#FF8C00] transition-colors">Gallery Management</h2>
+            <p className="text-zinc-400 text-sm">Add and remove photos globally across all past events.</p>
+          </Link>
         <div className="rounded-lg border border-foreground/10 p-5 sm:p-6">
           <h3 className="font-semibold">Messages</h3>
           <p className="mt-1 text-sm text-foreground/70">View contact inquiries.</p>
@@ -42,10 +54,6 @@ export default async function AdminPage() {
         <div className="rounded-lg border border-foreground/10 p-5 sm:p-6">
           <h3 className="font-semibold">Team</h3>
           <p className="mt-1 text-sm text-foreground/70">Update team members.</p>
-        </div>
-        <div className="rounded-lg border border-foreground/10 p-5 sm:p-6">
-          <h3 className="font-semibold">Gallery</h3>
-          <p className="mt-1 text-sm text-foreground/70">Upload and manage media.</p>
         </div>
       </div>
     </main>

@@ -37,6 +37,7 @@ export interface EventDetails {
   winners?: Winner[];
   gallery?: string[];
   sections?: EventSection[];
+  registrationOpen?: boolean;
 }
 
 export const eventsData: EventDetails[] = [

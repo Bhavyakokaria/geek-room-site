@@ -367,7 +367,7 @@ export default function EventDetailClient({ event }: { event: EventDetails }) {
                       <h3 className="text-xl font-black uppercase tracking-wider text-white">Event Highlights</h3>
                     </div>
 
-                    {event.winners && event.winners.length > 0 ? (
+                    {event.category !== "workshop" && event.winners && event.winners.length > 0 ? (
                       <div>
                         <p className="text-white/60 mb-6">Congratulations to our winners!</p>
                         <ul className="space-y-4">
@@ -396,7 +396,11 @@ export default function EventDetailClient({ event }: { event: EventDetails }) {
                       Secure your spot! Limited seats available. Don't miss this opportunity to learn, network, and grow.
                     </p>
 
-                    {event.registrationLink ? (
+                    {event.registrationOpen === false ? (
+                      <div className="text-center py-6 text-[#FF8C00] font-bold uppercase tracking-widest border border-[#FF8C00]/30 bg-[#FF8C00]/10 rounded-xl">
+                        REGISTRATION CLOSED
+                      </div>
+                    ) : event.registrationLink ? (
                       <motion.a
                         href={event.registrationLink}
                         target="_blank"

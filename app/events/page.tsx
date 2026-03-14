@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { eventsData } from "./data";
+import { getEvents } from "@/app/actions/eventActions";
 import EventsClient from "./EventsClient";
 import ScrambleText from "@/components/ScrambleText";
 import { TechDecorations } from "@/components/TechDecorations";
+import { EventDetails } from "./data";
 
 export const metadata: Metadata = {
   title: "Events — GeekRoom JEMTEC",
   description: "Upcoming and past events by GeekRoom JEMTEC.",
 };
+
+export const dynamic = "force-dynamic";
 
 // Tech Background Pattern Component
 function TechBackground() {
@@ -36,7 +39,25 @@ function TechBackground() {
   );
 }
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const customEvents = await getEvents();
+  
+  const mappedEvents: EventDetails[] = customEvents.map((e: any) => ({
+    slug: e.id,
+    title: e.title,
+    date: e.date,
+    type: e.status,
+    description: e.description,
+    image: e.image,
+    registrationLink: e.registrationLink,
+    location: e.location,
+    time: e.time,
+    category: e.category || "tech-fest",
+    registrationOpen: e.registrationOpen,
+    gallery: e.gallery,
+    winners: e.winners
+  }));
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16 relative">
       <TechBackground />
@@ -60,7 +81,7 @@ export default function EventsPage() {
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00F2FF] via-white to-[#FF8C00]">
               <span className="text-[#00F2FF] opacity-80">{'<'}</span>
               <ScrambleText text="GEEKROOM" delay={100} speed={20} />
-              <span className="text-[#FF8C00] opacity-80">{'/>'}</span>
+              <span className="text-[#FF8C00] opacity-80">{'>'}</span>
             </span>
           </h1>
           {/* Glowing underline */}
@@ -79,7 +100,7 @@ export default function EventsPage() {
       </div>
 
       {/* Interactive Tabs & Event Cards */}
-      <EventsClient events={eventsData} />
+      <EventsClient events={mappedEvents} />
 
       {/* Tech Corner Decorations */}
       <TechDecorations />

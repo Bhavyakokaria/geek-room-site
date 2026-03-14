@@ -376,19 +376,27 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                                     <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" style={{ color: borderColor }} />
                                   </div>
 
-                                  {event.registrationLink && event.type === "upcoming" && (
-                                    <motion.a
-                                      initial={{ opacity: 0, scale: 0.9 }}
-                                      animate={{ opacity: 1, scale: 1 }}
-                                      href={event.registrationLink}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="inline-flex items-center gap-1.5 rounded bg-[#00F2FF]/10 hover:bg-[#00F2FF]/20 border border-[#00F2FF]/40 px-2 py-1 text-[10px] font-mono font-bold text-[#00F2FF] transition-colors"
-                                    >
-                                      <span className="animate-pulse">►</span>
-                                      <ScrambleText text="REGISTER" delay={150} speed={20} />
-                                    </motion.a>
+                                  {event.type === "upcoming" ? (
+                                    event.registrationOpen === false ? (
+                                      <div className="inline-flex items-center gap-1.5 rounded bg-[#FF8C00]/10 border border-[#FF8C00]/40 px-2 py-1 text-[10px] font-mono font-bold text-[#FF8C00]">
+                                        <ScrambleText text="REGISTRATION CLOSED" delay={150} speed={20} />
+                                      </div>
+                                    ) : (
+                                      event.registrationLink && (
+                                        <Link
+                                          href={event.registrationLink}
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="inline-flex items-center gap-1.5 rounded bg-[#00F2FF]/10 hover:bg-[#00F2FF]/20 border border-[#00F2FF]/40 px-2 py-1 text-[10px] font-mono font-bold text-[#00F2FF] transition-colors"
+                                        >
+                                          <span className="animate-pulse">►</span>
+                                          <ScrambleText text="REGISTER" delay={150} speed={20} />
+                                        </Link>
+                                      )
+                                    )
+                                  ) : (
+                                    <div className="inline-flex items-center gap-1.5 rounded bg-[#FF8C00]/10 border border-[#FF8C00]/40 px-2 py-1 text-[10px] font-mono font-bold text-[#FF8C00]">
+                                      <ScrambleText text="Event Completed" delay={150} speed={20} />
+                                    </div>
                                   )}
                                 </div>
                               </motion.div>
