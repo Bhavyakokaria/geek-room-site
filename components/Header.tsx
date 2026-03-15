@@ -7,7 +7,7 @@ import { useUser, UserButton } from "@clerk/nextjs";
 
 const navLinks = [
   { href: "/", label: "Origin" },
-  { href: "/about", label: "About" },
+  { href: "/#about", label: "About" },
   { href: "/team", label: "Team" },
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
@@ -19,10 +19,11 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, isLoaded, isSignedIn } = useUser();
-  const isAdmin = user?.publicMetadata?.role === "admin";
+  const role = user?.publicMetadata?.role as string | undefined;
+  const isAdminOrOwner = role === "admin" || role === "owner";
 
   const displayedLinks = navLinks.filter(link => !(hideJoin && link.href === "/join"));
-  const allLinks = isAdmin 
+  const allLinks = isAdminOrOwner 
     ? [...displayedLinks, { href: "/admin", label: "Admin" }]
     : displayedLinks;
 
