@@ -4,6 +4,19 @@ import EventsClient from "./EventsClient";
 import ScrambleText from "@/components/ScrambleText";
 import { TechDecorations } from "@/components/TechDecorations";
 import { EventDetails } from "./data";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Events — GeekRoom JEMTEC",
@@ -59,7 +72,7 @@ export default async function EventsPage() {
   }));
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16 relative">
+    <main className={`mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 relative ${geistSans.variable} ${geistMono.variable} ${inter.variable}`}>
       <TechBackground />
 
       {/* Page Header with Tech Styling */}
@@ -69,19 +82,21 @@ export default async function EventsPage() {
           <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#00F2FF]/50" />
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-[#00F2FF] rounded-full animate-pulse" />
-            <div className="w-2 h-2 bg-[#FF8C00] rounded-full animate-pulse delay-75" />
+            <div className="w-2 h-2 bg-[#8C52FF] rounded-full animate-pulse delay-75" />
             <div className="w-2 h-2 bg-[#00F2FF] rounded-full animate-pulse delay-150" />
           </div>
           <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#00F2FF]/50" />
         </div>
 
         {/* Main Title */}
-        <div className="relative inline-block">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00F2FF] via-white to-[#FF8C00]">
-              <span className="text-[#00F2FF] opacity-80">{'<'}</span>
-              <ScrambleText text="GEEKROOM" delay={100} speed={20} />
-              <span className="text-[#FF8C00] opacity-80">{'>'}</span>
+        <div className="relative inline-block mb-2">
+          <h1 
+            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight font-['var(--font-geist-sans)']"
+          >
+            <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+              <span className="text-[#00F2FF] opacity-80 mr-2">{'<'}</span>
+              EVENTS
+              <span className="text-[#8C52FF] opacity-80 ml-2">{'/>'}</span>
             </span>
           </h1>
           {/* Glowing underline */}
@@ -94,7 +109,7 @@ export default async function EventsPage() {
           <ScrambleText text="Initialize Event Stream Protocol..." delay={300} speed={15} />
         </div>
 
-        <p className="mt-6 max-w-2xl mx-auto text-lg text-foreground/80 sm:text-xl font-light leading-relaxed">
+        <p className="mt-8 max-w-2xl mx-auto text-sm font-mono text-gray-400 uppercase tracking-widest mb-8">
           <ScrambleText text="Discover our upcoming workshops, hackathons, and tech talks, or explore the highlights of our past events." delay={500} speed={10} />
         </p>
       </div>
