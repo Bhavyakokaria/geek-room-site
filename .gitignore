@@ -40,7 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-<<<<<<< HEAD
 # AI assistant data
 .claude/
 MEMORY.md
@@ -50,7 +49,6 @@ MEMORY.md
 # These folders are for reference only and should not be copied to the repo:
 # geek veek, geek veek 2.0, hackquanta, hackforce, aptiverse, BlockGen
 # Images are located in public/images/events/
-=======
+
 # clerk configuration (can include secrets)
 /.clerk/
->>>>>>> main
