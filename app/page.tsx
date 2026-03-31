@@ -1,3 +1,4 @@
+import HeroLogoAnimation from "@/components/HeroLogoAnimation";
 import { HeroSection } from "@/components/HeroSection";
 import { WhySection } from "@/components/WhySection";
 import { TeamPreview } from "@/components/TeamPreview";
@@ -23,6 +24,9 @@ export default async function Home() {
 
   return (
     <main className="relative bg-[#050505] min-h-screen text-[#ededed]">
+      {/* 0. Hero Logo Animation (Intro Overlay) */}
+      <HeroLogoAnimation />
+
       {/* 1. Hero */}
       <HeroSection />
 
