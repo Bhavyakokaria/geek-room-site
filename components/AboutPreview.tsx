@@ -24,7 +24,7 @@ export function AboutPreview() {
     <section id="about" className="relative py-32 overflow-hidden bg-[#050505] min-h-screen flex items-center border-y border-white/5">
       {/* Background Animated Grid & Glows */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#00F2FF]/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#4F9EFF]/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-[#B026FF]/10 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10">
@@ -39,8 +39,8 @@ export function AboutPreview() {
             className="flex flex-col items-start"
           >
             <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
-              <div className="px-3 py-1 rounded-full border border-[#00F2FF]/30 bg-[#00F2FF]/10 text-[#00F2FF] text-xs font-mono uppercase tracking-widest flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#00F2FF] animate-pulse" />
+              <div className="px-3 py-1 rounded-full border border-[#4F9EFF]/30 bg-[#4F9EFF]/10 text-[#4F9EFF] text-xs font-mono uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#4F9EFF] animate-pulse" />
                 Initialize_Sequence
               </div>
             </motion.div>
@@ -51,7 +51,7 @@ export function AboutPreview() {
               style={{ fontFamily: "'Bebas Neue', sans-serif" }}
             >
               Beyond The <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F2FF] via-[#FF8C00] to-[#B026FF]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F9EFF] via-[#FF8C00] to-[#B026FF]">
                 Classroom
               </span>
             </motion.h2>
@@ -65,7 +65,7 @@ export function AboutPreview() {
                 href="#team-preview" 
                 className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-black rounded-lg overflow-hidden transition-transform hover:scale-105 active:scale-95"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#00F2FF] via-[#FF8C00] to-[#B026FF] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#4F9EFF] via-[#FF8C00] to-[#B026FF] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 <span className="font-bold tracking-wide uppercase text-sm">Initialize Deep Dive</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 
@@ -83,8 +83,8 @@ export function AboutPreview() {
             viewport={{ once: true, margin: "-100px" }}
             className="grid grid-cols-2 gap-4 lg:gap-6 relative"
           >
-            <motion.div variants={itemVariants} className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6 lg:p-8 hover:border-[#00F2FF]/40 hover:shadow-[0_0_30px_rgba(0,242,255,0.15)] transition-all duration-500 group translate-y-8">
-              <Terminal className="w-8 h-8 text-[#00F2FF] mb-4 group-hover:scale-110 transition-transform" />
+            <motion.div variants={itemVariants} className="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6 lg:p-8 hover:border-[#4F9EFF]/40 hover:shadow-[0_0_30px_rgba(0,242,255,0.15)] transition-all duration-500 group translate-y-8">
+              <Terminal className="w-8 h-8 text-[#4F9EFF] mb-4 group-hover:scale-110 transition-transform" />
               <h3 className="text-xl font-bold mb-2">Build</h3>
               <p className="text-sm text-gray-500">Transforming ideas into scalable production code.</p>
             </motion.div>

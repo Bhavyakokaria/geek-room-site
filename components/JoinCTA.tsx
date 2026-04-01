@@ -61,13 +61,13 @@ export function JoinCTA() {
           <span
             className="w-1.5 h-1.5 rounded-full"
             style={{
-              backgroundColor: "#00F2FF",
+              backgroundColor: "#4F9EFF",
               boxShadow: "0 0 8px rgba(0,242,255,0.6)",
             }}
           />
           <span
             className="text-xs font-medium tracking-[0.2em] uppercase"
-            style={{ color: "#00F2FF", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
           >
             Join Geek Room
           </span>
@@ -91,7 +91,7 @@ export function JoinCTA() {
           Ready to build
           <br />
           something{" "}
-          <span style={{ color: "#00F2FF" }}>real?</span>
+          <span style={{ color: "#4F9EFF" }}>real?</span>
         </motion.h2>
 
         {/* Sub-copy */}
@@ -125,7 +125,7 @@ export function JoinCTA() {
             href="/join"
             className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300"
             style={{
-              backgroundColor: "#00F2FF",
+              backgroundColor: "#4F9EFF",
               color: "#050505",
               fontFamily: "'Inter', sans-serif",
               letterSpacing: "0.01em",
@@ -137,7 +137,7 @@ export function JoinCTA() {
                 "0 12px 40px rgba(0,242,255,0.35)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "#00F2FF";
+              (e.currentTarget as HTMLElement).style.backgroundColor = "#4F9EFF";
               (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
             }}

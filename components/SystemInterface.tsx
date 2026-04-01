@@ -42,10 +42,6 @@ export function SystemInterface() {
     return () => clearTimeout(timeout);
   }, [text, isDeleting, phraseIndex]);
 
-  useEffect(() => {
-    setText("> ");
-  }, []);
-
   const panels = [
     { title: "BUILD", icon: <Terminal className="w-6 h-6" />, desc: "Shipping real-world projects" },
     { title: "INNOVATE", icon: <Zap className="w-6 h-6" />, desc: "Hackathons & experiments" },
@@ -68,10 +64,10 @@ export function SystemInterface() {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center justify-between">
           <div className="flex-1 w-full max-w-xl flex flex-col gap-6">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-              <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#00F2FF] to-white tracking-wider mb-4 drop-shadow-[0_0_15px_rgba(0,242,255,0.5)]" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+              <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#4F9EFF] to-white tracking-wider mb-4 drop-shadow-[0_0_15px_rgba(0,242,255,0.5)]" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                 SYSTEM: GEEK ROOM
               </h2>
-              <p className="font-mono text-sm md:text-base text-gray-400 uppercase tracking-widest border-l-2 border-[#00F2FF] pl-4 py-1">
+              <p className="font-mono text-sm md:text-base text-gray-400 uppercase tracking-widest border-l-2 border-[#4F9EFF] pl-4 py-1">
                 Initializing builders, hackers, and creators...
               </p>
             </motion.div>
@@ -85,11 +81,11 @@ export function SystemInterface() {
                 </div>
                 <div className="mx-auto text-[10px] font-mono text-gray-500 uppercase tracking-widest">root@geekroom:~</div>
               </div>
-              <div className="p-6 h-40 font-mono text-sm sm:text-base text-[#00F2FF] flex flex-col">
+              <div className="p-6 h-40 font-mono text-sm sm:text-base text-[#4F9EFF] flex flex-col">
                 <div className="text-gray-500 mb-2">Connected to secure server. Starting sequence.</div>
                 <div className="flex items-center">
                   <span>{text}</span>
-                  <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-2.5 h-5 bg-[#00F2FF] ml-1 inline-block" />
+                  <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-2.5 h-5 bg-[#4F9EFF] ml-1 inline-block" />
                 </div>
               </div>
             </motion.div>
@@ -97,18 +93,18 @@ export function SystemInterface() {
 
           <div className="flex-1 w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 perspective-[1000px]">
             {panels.map((panel, idx) => (
-              <motion.div key={panel.title} initial={{ opacity: 0, y: 30, rotateX: 10 }} whileInView={{ opacity: 1, y: 0, rotateX: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 + (idx * 0.1), duration: 0.6, type: "spring", stiffness: 100 }} whileHover={{ rotateX: 5, rotateY: -5, scale: 1.02, zIndex: 10 }} className="group relative h-40 sm:h-48 p-6 flex flex-col justify-between rounded-2xl bg-[#0A0A0A]/50 backdrop-blur-md border border-white/5 overflow-hidden transition-all duration-300 hover:border-[#00F2FF]/40 hover:shadow-[0_0_30px_rgba(0,242,255,0.15)] hover:bg-[#0A0A0A]/80">
+              <motion.div key={panel.title} initial={{ opacity: 0, y: 30, rotateX: 10 }} whileInView={{ opacity: 1, y: 0, rotateX: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 + (idx * 0.1), duration: 0.6, type: "spring", stiffness: 100 }} whileHover={{ rotateX: 5, rotateY: -5, scale: 1.02, zIndex: 10 }} className="group relative h-40 sm:h-48 p-6 flex flex-col justify-between rounded-2xl bg-[#0A0A0A]/50 backdrop-blur-md border border-white/5 overflow-hidden transition-all duration-300 hover:border-[#4F9EFF]/40 hover:shadow-[0_0_30px_rgba(0,242,255,0.15)] hover:bg-[#0A0A0A]/80">
                 <div className="flex justify-between items-start z-10">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:bg-[#00F2FF]/10 group-hover:border-[#00F2FF]/30 group-hover:text-[#00F2FF] text-gray-400 transition-all duration-300">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:bg-[#4F9EFF]/10 group-hover:border-[#4F9EFF]/30 group-hover:text-[#4F9EFF] text-gray-400 transition-all duration-300">
                     {panel.icon}
                   </div>
-                  <div className="text-[10px] font-mono text-gray-600 group-hover:text-[#00F2FF]/50 transition-colors">[{idx + 1}]</div>
+                  <div className="text-[10px] font-mono text-gray-600 group-hover:text-[#4F9EFF]/50 transition-colors">[{idx + 1}]</div>
                 </div>
                 <div className="z-10 mt-4">
-                  <h3 className="text-xl font-bold font-mono tracking-wider text-white group-hover:text-[#00F2FF] transition-colors duration-300 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">{panel.title}</h3>
+                  <h3 className="text-xl font-bold font-mono tracking-wider text-white group-hover:text-[#4F9EFF] transition-colors duration-300 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">{panel.title}</h3>
                   <p className="text-sm font-mono text-gray-400 mt-2 group-hover:text-gray-300 transition-colors opacity-80 group-hover:opacity-100">{panel.desc}</p>
                 </div>
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#00F2FF]/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 transform origin-left" />
+                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#4F9EFF]/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 transform origin-left" />
                 <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top_right,rgba(0,242,255,0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </motion.div>
             ))}

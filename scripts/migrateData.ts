@@ -29,8 +29,8 @@ async function main() {
       });
     }
     console.log(`✅ Migrated \${teamMembers.length} team members.`);
-  } catch (err: any) {
-    if (err.code === 'ENOENT') console.log("⚠️ No team.json found, skipping.");
+  } catch (err: unknown) {
+    if (err instanceof Error && 'code' in err && err.code === 'ENOENT') console.log("⚠️ No team.json found, skipping.");
     else console.error("❌ Failed team migration:", err);
   }
 
@@ -47,8 +47,8 @@ async function main() {
       }
     });
     console.log(`✅ Migrated settings.`);
-  } catch (err: any) {
-    if (err.code === 'ENOENT') console.log("⚠️ No settings.json found, skipping.");
+  } catch (err: unknown) {
+    if (err instanceof Error && 'code' in err && err.code === 'ENOENT') console.log("⚠️ No settings.json found, skipping.");
     else console.error("❌ Failed settings migration:", err);
   }
 
@@ -61,7 +61,7 @@ async function main() {
 
     for (const event of events) {
       // Setup winners to create inline
-      const winnersData = event.winners ? event.winners.map((w: any) => ({
+      const winnersData = event.winners ? event.winners.map((w: { rank: string; teamName: string; members?: string[]; photo?: string }) => ({
         rank: w.rank,
         teamName: w.teamName,
         members: w.members || [],
@@ -88,9 +88,9 @@ async function main() {
         }
       });
     }
-    console.log(`✅ Migrated \${events.length} events with their winners.`);
-  } catch (err: any) {
-    if (err.code === 'ENOENT') console.log("⚠️ No events.json found, skipping.");
+    console.log(`✅ Migrated \${events.length} events.`);
+  } catch (err: unknown) {
+    if (err instanceof Error && 'code' in err && err.code === 'ENOENT') console.log("⚠️ No events.json found, skipping.");
     else console.error("❌ Failed events migration:", err);
   }
 

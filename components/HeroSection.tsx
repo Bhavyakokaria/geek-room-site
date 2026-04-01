@@ -6,18 +6,18 @@ import { useRef } from "react";
 import { ArrowRight, Users, Calendar, MapPin } from "lucide-react";
 import { AsciiVisual } from "@/components/AsciiVisual";
 
-const METRICS = [
-  { icon: Calendar, value: "6+", label: "Signature Events" },
-  { icon: Users, value: "100+", label: "Active Members" },
-  { icon: MapPin, value: "JEMTEC", label: "Campus, Delhi" },
-];
-
-export function HeroSection() {
+export function HeroSection({ eventsCount, membersCount }: { eventsCount?: number; membersCount?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+
+  const METRICS = [
+    { icon: Calendar, value: eventsCount != null ? `${eventsCount}+` : "6+", label: "Signature Events" },
+    { icon: Users, value: membersCount != null ? `${membersCount}+` : "100+", label: "Active Members" },
+    { icon: MapPin, value: "JEMTEC", label: "Campus, Greater Noida" },
+  ];
 
   return (
     <section
@@ -71,11 +71,11 @@ export function HeroSection() {
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: "#00F2FF", boxShadow: "0 0 8px rgba(0,242,255,0.6)" }}
+                style={{ backgroundColor: "#4F9EFF", boxShadow: "0 0 8px rgba(0,242,255,0.6)" }}
               />
               <span
                 className="text-xs font-medium tracking-[0.2em] uppercase"
-                style={{ color: "#00F2FF", fontFamily: "'Inter', sans-serif" }}
+                style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
               >
                 GEEKROOM — JEMTEC
               </span>
@@ -99,7 +99,7 @@ export function HeroSection() {
               <em
                 style={{
                   fontStyle: "normal",
-                  color: "#00F2FF",
+                  color: "#4F9EFF",
                 }}
               >
                 build,
@@ -109,7 +109,7 @@ export function HeroSection() {
               <em
                 style={{
                   fontStyle: "normal",
-                  color: "#00F2FF",
+                  color: "#4F9EFF",
                 }}
               >
                 grow
@@ -146,7 +146,7 @@ export function HeroSection() {
                 href="/join"
                 className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300"
                 style={{
-                  backgroundColor: "#00F2FF",
+                  backgroundColor: "#4F9EFF",
                   color: "#050505",
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: "0.01em",
@@ -157,7 +157,7 @@ export function HeroSection() {
                   (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 30px rgba(0,242,255,0.3)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "#00F2FF";
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "#4F9EFF";
                   (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                   (e.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
@@ -203,7 +203,7 @@ export function HeroSection() {
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
                     style={{ backgroundColor: "rgba(0,242,255,0.07)", border: "1px solid rgba(0,242,255,0.12)" }}
                   >
-                    <Icon className="w-4 h-4" style={{ color: "#00F2FF" }} />
+                    <Icon className="w-4 h-4" style={{ color: "#4F9EFF" }} />
                   </div>
                   <div>
                     <div

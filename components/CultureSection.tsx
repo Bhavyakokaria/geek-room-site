@@ -58,10 +58,10 @@ export function CultureSection() {
           transition={{ duration: 0.6 }}
           className="flex items-center gap-3 mb-6"
         >
-          <div className="h-px w-8" style={{ backgroundColor: "#00F2FF" }} />
+          <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
           <span
             className="text-xs font-medium tracking-[0.2em] uppercase"
-            style={{ color: "#00F2FF", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
           >
             Culture
           </span>
@@ -133,7 +133,7 @@ export function CultureSection() {
               {/* Lime accent line */}
               <div
                 className="mb-6 h-px w-12 transition-all duration-500 group-hover:w-20"
-                style={{ backgroundColor: "#00F2FF" }}
+                style={{ backgroundColor: "#4F9EFF" }}
               />
 
               {/* Statement */}

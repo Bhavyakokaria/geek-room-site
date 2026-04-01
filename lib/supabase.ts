@@ -22,6 +22,8 @@ export function getSupabase(): SupabaseClient {
 // but make it a Proxy that lazily initialises on first property access.
 export const supabase = new Proxy({} as SupabaseClient, {
   get(_target, prop) {
-    return (getSupabase() as any)[prop];
+    const client = getSupabase();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (client as any)[prop];
   },
 });

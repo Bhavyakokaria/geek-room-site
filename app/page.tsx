@@ -1,4 +1,4 @@
-import HeroLogoAnimation from "@/components/HeroLogoAnimation";
+
 import { HeroSection } from "@/components/HeroSection";
 import { WhySection } from "@/components/WhySection";
 import { TeamPreview } from "@/components/TeamPreview";
@@ -25,7 +25,7 @@ export default async function Home() {
   return (
     <main style={{ backgroundColor: "#050505", minHeight: "100vh", color: "#ededed" }}>
       {/* 1. Hero */}
-      <HeroSection />
+      <HeroSection eventsCount={events.length} membersCount={members.length} />
 
       {/* 2. Why Geek Room */}
       <WhySection />

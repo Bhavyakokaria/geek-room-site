@@ -15,27 +15,27 @@ model Event {
   location         String
   registrationLink String?
   image            String
-  status           String              // "upcoming" or "past"
-  category         String?             // "hackathon", "workshop", etc.
+  status           String
+  category         String?
   time             String?
   registrationOpen Boolean             @default(true)
-  gallery          String[]            // array of image URLs
+  gallery          String[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
-
-  winners          Winner[]
   registrations    EventRegistration[]
+  FormField        FormField[]
+  submissions      FormSubmission[]
+  winners          Winner[]
 }
 
 model Winner {
-  id        String   @id @default(uuid())
-  eventId   String
-  rank      String
-  teamName  String
-  members   String[]
-  photo     String?
-  
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  id       String   @id @default(uuid())
+  eventId  String
+  rank     String
+  teamName String
+  members  String[]
+  photo    String?
+  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model EventRegistration {
@@ -46,7 +46,6 @@ model EventRegistration {
   phone     String
   college   String
   timestamp DateTime @default(now())
-
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
@@ -54,7 +53,7 @@ model TeamMember {
   id        Int      @id @default(autoincrement())
   name      String
   role      String
-  category  String   // "Core", "Heads", "Tech", "Publicity", "Design", "Management"
+  category  String
   photo     String
   gmail     String
   linkedin  String
@@ -63,8 +62,27 @@ model TeamMember {
 }
 
 model Setting {
-  id          String   @id @default(uuid())
-  key         String   @unique
-  value       String   // JSON stringified value
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model FormSubmission {
+  id        String   @id @default(uuid())
+  eventId   String
+  data      Json
+  submitted DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model FormField {
+  id       String   @id
+  eventId  String
+  label    String
+  type     String
+  required Boolean  @default(false)
+  options  String[]
+  order    Int      @default(0)
+  Event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }

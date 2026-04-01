@@ -198,7 +198,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] bg-[#00F2FF] text-black font-mono text-sm px-6 py-3 rounded-full shadow-[0_0_30px_rgba(0,242,255,0.4)] flex items-center gap-2"
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] bg-[#4F9EFF] text-black font-mono text-sm px-6 py-3 rounded-full shadow-[0_0_30px_rgba(0,242,255,0.4)] flex items-center gap-2"
           >
             <Check className="w-4 h-4" />
             {toast}
@@ -218,9 +218,9 @@ export default function GalleryClient({ events }: GalleryClientProps) {
           >
             <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
               <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-                <span className="text-[#00F2FF] opacity-80 mr-2">{'<'}</span>
+                <span className="text-[#4F9EFF] opacity-80 mr-2">{'<'}</span>
                 MEDIA ARCHIVE
-                <span className="text-[#00F2FF] opacity-80 ml-2">{'/>'}</span>
+                <span className="text-[#4F9EFF] opacity-80 ml-2">{'/>'}</span>
               </span>
             </h1>
             <p className="text-sm font-mono text-gray-400 uppercase tracking-widest">
@@ -258,7 +258,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   {filter === type && (
                     <motion.div
                       layoutId="filterTabIndicator"
-                      className="absolute inset-0 bg-[#00F2FF] shadow-[0_0_20px_rgba(0,242,255,0.6)] rounded-full"
+                      className="absolute inset-0 bg-[#4F9EFF] shadow-[0_0_20px_rgba(0,242,255,0.6)] rounded-full"
                       style={{ zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
@@ -351,7 +351,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                           >
                             <motion.button
                               whileHover={{ scale: 1.1 }}
-                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-75 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#00F2FF] hover:border-[#00F2FF] hover:text-black hover:shadow-[0_0_15px_rgba(0,242,255,0.5)] cursor-pointer"
+                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-75 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#4F9EFF] hover:border-[#4F9EFF] hover:text-black hover:shadow-[0_0_15px_rgba(0,242,255,0.5)] cursor-pointer"
                               onClick={(e) => { e.stopPropagation(); setActiveFolder(eventSlug); }}
                               aria-label={`Open ${eventData?.title || eventSlug} folder`}
                             >
@@ -441,10 +441,10 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                       }}
                     >
                        <div className="flex items-center gap-4">
-                         <div className="w-10 h-10 rounded-xl bg-[#00F2FF]/10 flex items-center justify-center border border-[#00F2FF]/30 group-hover:bg-[#00F2FF] group-hover:shadow-[0_0_15px_rgba(0,242,255,0.4)] transition-all duration-300 shrink-0">
-                           <FolderOpen className="w-5 h-5 text-[#00F2FF] group-hover:text-black transition-colors" />
+                         <div className="w-10 h-10 rounded-xl bg-[#4F9EFF]/10 flex items-center justify-center border border-[#4F9EFF]/30 group-hover:bg-[#4F9EFF] group-hover:shadow-[0_0_15px_rgba(0,242,255,0.4)] transition-all duration-300 shrink-0">
+                           <FolderOpen className="w-5 h-5 text-[#4F9EFF] group-hover:text-black transition-colors" />
                          </div>
-                         <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-wider line-clamp-1 group-hover:text-[#00F2FF] transition-colors duration-300" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+                         <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-wider line-clamp-1 group-hover:text-[#4F9EFF] transition-colors duration-300" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                            {eventData?.title || eventSlug}
                          </h3>
                        </div>
@@ -466,7 +466,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
 
                       <div className="flex flex-wrap gap-1.5">
                         {items.filter(i => i.type === "photo").length > 0 && (
-                          <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-[#00F2FF] bg-[#00F2FF]/10 px-2.5 py-1 rounded-md border border-[#00F2FF]/20 group-hover:border-[#00F2FF]/40 transition-colors">
+                          <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-[#4F9EFF] bg-[#4F9EFF]/10 px-2.5 py-1 rounded-md border border-[#4F9EFF]/20 group-hover:border-[#4F9EFF]/40 transition-colors">
                             <ImageIcon className="w-3 h-3" />
                             {items.filter(i => i.type === "photo").length}
                           </span>
@@ -497,7 +497,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full relative min-h-[50vh] p-2 sm:p-4 rounded-3xl bg-[#050505]/90 backdrop-blur-xl border border-[#00F2FF]/20 shadow-[0_0_50px_rgba(0,242,255,0.05)] origin-center"
+              className="w-full relative min-h-[50vh] p-2 sm:p-4 rounded-3xl bg-[#050505]/90 backdrop-blur-xl border border-[#4F9EFF]/20 shadow-[0_0_50px_rgba(0,242,255,0.05)] origin-center"
             >
               {/* Folder Header */}
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-white/10 relative">
@@ -533,17 +533,17 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   className="flex bg-white/5 backdrop-blur-md rounded-full p-1.5 gap-2 text-xs font-mono uppercase text-gray-300 self-start md:self-auto border border-white/10 shadow-lg"
                 >
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40">
-                    <Calendar className="w-3.5 h-3.5 text-[#00F2FF]" />
+                    <Calendar className="w-3.5 h-3.5 text-[#4F9EFF]" />
                     {events.find(e => e.slug === effectiveFolder)?.date || "Archived"}
                   </div>
                   {events.find(e => e.slug === effectiveFolder)?.location && (
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40">
-                      <MapPin className="w-3.5 h-3.5 text-[#00F2FF]" />
+                      <MapPin className="w-3.5 h-3.5 text-[#4F9EFF]" />
                       {events.find(e => e.slug === effectiveFolder)?.location}
                     </div>
                   )}
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40">
-                    <FolderOpen className="w-3.5 h-3.5 text-[#00F2FF]" />
+                    <FolderOpen className="w-3.5 h-3.5 text-[#4F9EFF]" />
                     <span className="font-bold">{activeFolderItems.length} Files</span>
                   </div>
                 </motion.div>
@@ -566,7 +566,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                         delay: index * 0.03,
                         duration: 0.4
                       }}
-                      className="relative group cursor-pointer w-full rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0A] break-inside-avoid border border-white/5 hover:border-[#00F2FF]/30 glitch-on-hover"
+                      className="relative group cursor-pointer w-full rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0A] break-inside-avoid border border-white/5 hover:border-[#4F9EFF]/30 glitch-on-hover"
                       data-clickable
                       style={{
                         boxShadow: `
@@ -585,7 +585,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                       {!isLoaded && item.type === "photo" && (
                         <div className="absolute inset-0 flex items-center justify-center bg-[#050505] min-h-[200px]">
                           <motion.div
-                            className="w-6 h-6 border-2 border-[#00F2FF] border-t-transparent rounded-full"
+                            className="w-6 h-6 border-2 border-[#4F9EFF] border-t-transparent rounded-full"
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1, repeat: Infinity }}
                           />

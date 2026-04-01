@@ -38,7 +38,7 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
     <section className="relative py-32 bg-[#020202] overflow-hidden flex flex-col items-center">
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#FF8C00]/10 blur-[150px] rounded-full pointer-events-none -translate-y-1/2" />
-      <div className="absolute top-1/2 right-0 w-96 h-96 bg-[#00F2FF]/10 blur-[150px] rounded-full pointer-events-none -translate-y-1/2" />
+      <div className="absolute top-1/2 right-0 w-96 h-96 bg-[#4F9EFF]/10 blur-[150px] rounded-full pointer-events-none -translate-y-1/2" />
 
       <div className="text-center z-10 mb-16 px-4">
         <motion.div

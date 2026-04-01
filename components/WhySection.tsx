@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Hammer, Zap, Users } from "lucide-react";
 
 const PILLARS = [
@@ -27,12 +27,12 @@ const PILLARS = [
   },
 ];
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
@@ -67,10 +67,10 @@ export function WhySection() {
           transition={{ duration: 0.6 }}
           className="flex items-center gap-3 mb-6"
         >
-          <div className="h-px w-8" style={{ backgroundColor: "#00F2FF" }} />
+          <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
           <span
             className="text-xs font-medium tracking-[0.2em] uppercase"
-            style={{ color: "#00F2FF", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
           >
             Why Geek Room
           </span>
@@ -113,7 +113,7 @@ export function WhySection() {
               }}
             >
               Geek Room is where JEMTEC students with ambition find their people, sharpen their
-              craft, and build things they're proud of.
+              craft, and build things they&apos;re proud of.
             </motion.p>
 
             {/* Decorative quote line */}
@@ -123,7 +123,7 @@ export function WhySection() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.3 }}
               className="mt-12 pl-5"
-              style={{ borderLeft: "2px solid #00F2FF" }}
+              style={{ borderLeft: "2px solid #4F9EFF" }}
             >
               <p
                 className="italic leading-snug"
@@ -134,7 +134,7 @@ export function WhySection() {
                   fontWeight: 500,
                 }}
               >
-                "The best way to learn tech is to build something that matters."
+                &quot;The best way to learn tech is to build something that matters.&quot;
               </p>
             </motion.div>
           </div>
@@ -170,7 +170,7 @@ export function WhySection() {
                       className="w-10 h-10 rounded-xl flex items-center justify-center"
                       style={{ backgroundColor: "rgba(0,242,255,0.08)", border: "1px solid rgba(0,242,255,0.14)" }}
                     >
-                      <pillar.icon className="w-4.5 h-4.5" style={{ color: "#00F2FF", width: 18, height: 18 }} />
+                      <pillar.icon className="w-4.5 h-4.5" style={{ color: "#4F9EFF", width: 18, height: 18 }} />
                     </div>
                     <span
                       className="font-mono text-xs"
@@ -211,7 +211,7 @@ export function WhySection() {
                 {/* Bottom accent line on hover */}
                 <div
                   className="absolute bottom-0 left-7 right-7 h-px transition-all duration-500 opacity-0 group-hover:opacity-100"
-                  style={{ background: "linear-gradient(90deg, #00F2FF, transparent)" }}
+                  style={{ background: "linear-gradient(90deg, #4F9EFF, transparent)" }}
                 />
               </motion.div>
             ))}

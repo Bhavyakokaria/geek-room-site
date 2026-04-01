@@ -44,10 +44,10 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
               transition={{ duration: 0.6 }}
               className="flex items-center gap-3 mb-6"
             >
-              <div className="h-px w-8" style={{ backgroundColor: "#00F2FF" }} />
+              <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
               <span
                 className="text-xs font-medium tracking-[0.2em] uppercase"
-                style={{ color: "#00F2FF", fontFamily: "'Inter', sans-serif" }}
+                style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
               >
                 Core Team
               </span>
@@ -85,7 +85,7 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
                 fontFamily: "'Inter', sans-serif",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#00F2FF";
+                (e.currentTarget as HTMLElement).style.color = "#4F9EFF";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
@@ -355,7 +355,7 @@ function MemberModal({
               style={{
                 background: "rgba(0,242,255,0.07)",
                 border: "1px solid rgba(0,242,255,0.14)",
-                color: "#00F2FF",
+                color: "#4F9EFF",
                 fontFamily: "'Inter', sans-serif",
               }}
             >

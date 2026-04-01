@@ -107,7 +107,7 @@ export function AsciiVisual() {
   return (
     <div className="relative w-[500px] h-[500px] flex items-center justify-center pointer-events-none group">
       {/* Background ambient glow */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#00F2FF]/10 to-[#FF8C00]/10 blur-3xl mix-blend-screen opacity-50 group-hover:opacity-80 transition-opacity duration-1000" />
+      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#4F9EFF]/10 to-[#FF8C00]/10 blur-3xl mix-blend-screen opacity-50 group-hover:opacity-80 transition-opacity duration-1000" />
       
       <canvas 
         ref={canvasRef} 

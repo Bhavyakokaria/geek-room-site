@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { EventDetails } from "./data";
 import { 
@@ -58,6 +58,11 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
   const [sortBy, setSortBy] = useState<"latest" | "popular" | "ending-soon">("latest");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   
+  const featuredRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: featuredRef, offset: ["start end", "end start"] });
+  const featuredY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const featuredOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.6, 1, 1, 0.6]);
+  
   const categories = ["all", "hackathon", "workshop", "talk", "tech-event"];
 
   // Filter & Sort Logic
@@ -85,16 +90,24 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
       <LunarRunwayBackground />
 
       {/* ============== HERO / FEATURED SECTION ============== */}
-      <div className="relative z-10 flex flex-col items-center mb-16">
-        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-          <div className="w-2 h-2 rounded-full bg-[#00F2FF] animate-pulse" />
-          <span className="text-xs font-medium text-white/80">
+      <div className="relative z-10 flex flex-col items-center mb-16" ref={featuredRef}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="inline-flex items-center gap-2 bg-[#4F9EFF]/5 border border-[#4F9EFF]/15 rounded-full px-4 py-1.5 mb-8 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+        >
+          <div className="w-2 h-2 rounded-full bg-[#4F9EFF] animate-pulse" />
+          <span className="text-xs font-medium text-[#4F9EFF]/80">
             System Online
           </span>
-        </div>
+        </motion.div>
 
         {/* Featured Card */}
-        <div className="w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0A0A0A]/40 backdrop-blur-2xl overflow-hidden relative shadow-[0_8px_30px_rgb(0,0,0,0.12)] group">
+        <motion.div
+          style={{ y: featuredY, opacity: featuredOpacity }}
+          className="w-full max-w-5xl rounded-3xl border border-[#4F9EFF]/10 bg-[#0A0A0A]/40 backdrop-blur-2xl overflow-hidden relative shadow-[0_8px_30px_rgb(0,0,0,0.12)] group"
+          >
           
           <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] min-h-[350px]">
             {/* Content Side */}
@@ -129,14 +142,14 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                       </div>
                     ))}
                   </div>
-                  <Link href={featuredEvent.registrationLink || `/events/${featuredEvent.slug}`} className="sm:ml-auto inline-flex items-center justify-center rounded-full bg-white text-black px-6 py-2.5 text-sm font-semibold hover:bg-gray-200 transition-colors gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                  <Link href={featuredEvent.registrationLink || `/events/${featuredEvent.slug}`} className="sm:ml-auto inline-flex items-center justify-center rounded-full bg-[#4F9EFF] text-black px-6 py-2.5 text-sm font-semibold hover:bg-[#4F9EFF]/80 transition-colors gap-2 shadow-[0_0_20px_rgba(79,158,255,0.3)]">
                     <Zap className="w-4 h-4" />
                     Register Now
                   </Link>
                 </div>
               ) : (
                 <div className="mt-auto">
-                  <Link href={`/events/${featuredEvent.slug}`} className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-gray-300 transition-colors pb-1 border-b border-white/20">
+                  <Link href={`/events/${featuredEvent.slug}`} className="inline-flex items-center gap-2 text-sm font-medium text-[#4F9EFF] hover:text-[#4F9EFF]/70 transition-colors pb-1 border-b border-[#4F9EFF]/30">
                     View Details <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -155,20 +168,20 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                   <MonitorPlay className="w-16 h-16 text-white/5" />
                 </div>
               )}
-              <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 text-[10px] font-medium text-white uppercase tracking-wider">
+              <div className="absolute top-4 right-4 bg-[#4F9EFF]/10 backdrop-blur-md border border-[#4F9EFF]/20 rounded-full px-3 py-1 text-[10px] font-medium text-[#4F9EFF] uppercase tracking-wider">
                 {isUpcoming ? "Featured" : "Archive"}
-              </div>
-            </div>
+          </div>
           </div>
         </div>
+        </motion.div>
       </div>
 
       {/* ============== FILTER & CONTROLS ============== */}
       <div className="relative flex flex-col items-center z-20 mb-12">
         {/* Toggle Status (Past/Upcoming) */}
-        <div className="relative flex w-full max-w-sm overflow-hidden rounded-full bg-white/5 backdrop-blur-xl border border-white/10 p-1 mb-8 shadow-sm">
+        <div className="relative flex w-full max-w-sm overflow-hidden rounded-full bg-white/5 backdrop-blur-xl border border-[#4F9EFF]/10 p-1 mb-8 shadow-sm">
           <motion.div
-            className="absolute bottom-1 top-1 h-auto bg-white/10 rounded-full shadow-sm"
+            className="absolute bottom-1 top-1 h-auto bg-[#4F9EFF]/15 rounded-full shadow-sm"
             initial={false}
             animate={{ width: "calc(50% - 4px)", x: activeTab === "past" ? "4px" : "calc(100% + 4px)" }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -177,7 +190,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
             <button
               onClick={() => setActiveTab("past")}
               className={`flex-1 relative py-2 text-sm font-medium transition-colors rounded-full ${
-                activeTab === "past" ? "text-white" : "text-gray-400 hover:text-gray-200"
+                activeTab === "past" ? "text-[#4F9EFF]" : "text-gray-400 hover:text-gray-200"
               }`}
             >
               Past Events
@@ -185,7 +198,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
             <button
               onClick={() => setActiveTab("upcoming")}
               className={`flex-1 relative py-2 text-sm font-medium transition-colors rounded-full ${
-                activeTab === "upcoming" ? "text-white" : "text-gray-400 hover:text-gray-200"
+                activeTab === "upcoming" ? "text-[#4F9EFF]" : "text-gray-400 hover:text-gray-200"
               }`}
             >
               Upcoming
@@ -194,7 +207,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
         </div>
 
         {/* Action Bar (Search, Category, Sort) */}
-        <div className="w-full flex flex-col lg:flex-row gap-4 items-center justify-between bg-[#0a0a0a]/50 border border-white/10 p-2 lg:p-3 rounded-2xl backdrop-blur-xl sticky top-20 z-40 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+        <div className="w-full flex flex-col lg:flex-row gap-4 items-center justify-between bg-[#0a0a0a]/50 border border-[#4F9EFF]/10 p-2 lg:p-3 rounded-2xl backdrop-blur-xl sticky top-20 z-40 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
           
           {/* Search Box */}
           <div className="relative w-full lg:w-72 max-w-md group/search">
@@ -206,7 +219,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search events..."
-              className="block w-full pl-9 pr-3 py-2 border-transparent rounded-xl leading-5 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all font-medium"
+              className="block w-full pl-9 pr-3 py-2 border-transparent rounded-xl leading-5 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#4F9EFF]/30 focus:bg-[#4F9EFF]/5 transition-all font-medium"
             />
           </div>
 
@@ -218,8 +231,8 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                 onClick={() => setActiveCategory(cat)}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all whitespace-nowrap ${
                   activeCategory === cat
-                    ? "bg-white text-black shadow-sm"
-                    : "bg-white/5 text-gray-400 border border-transparent hover:bg-white/10 hover:text-white"
+                    ? "bg-[#4F9EFF] text-black shadow-sm shadow-[#4F9EFF]/20"
+                    : "bg-white/5 text-gray-400 border border-transparent hover:bg-[#4F9EFF]/10 hover:text-[#4F9EFF]"
                 }`}
               >
                 {cat.replace('-', ' ')}
@@ -232,22 +245,22 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
             <div className="relative">
               <button 
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl text-xs font-medium text-gray-300 hover:text-[#4F9EFF] hover:bg-[#4F9EFF]/10 transition-all"
               >
-                Sort by: <span className="text-white capitalize">{sortBy.replace('-', ' ')}</span> <ChevronDown className="w-3.5 h-3.5" />
+                Sort by: <span className="text-[#4F9EFF] capitalize">{sortBy.replace('-', ' ')}</span> <ChevronDown className="w-3.5 h-3.5" />
               </button>
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95, y: 5 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 5 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-40 bg-[#111] border border-white/10 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden z-50 flex flex-col p-1 backdrop-blur-xl"
+                    className="absolute right-0 mt-2 w-40 bg-[#0a0a0a] border border-[#4F9EFF]/10 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden z-50 flex flex-col p-1 backdrop-blur-xl"
                   >
                     {(["latest", "popular", "ending-soon"] as const).map(opt => (
                       <button 
                         key={opt}
                         onClick={() => { setSortBy(opt); setDropdownOpen(false); }}
-                        className={`text-left px-3 py-2 text-xs font-medium capitalize rounded-lg transition-colors ${sortBy === opt ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+                        className={`text-left px-3 py-2 text-xs font-medium capitalize rounded-lg transition-colors ${sortBy === opt ? "bg-[#4F9EFF]/10 text-[#4F9EFF]" : "text-gray-400 hover:bg-[#4F9EFF]/5 hover:text-white"}`}
                       >
                         {opt.replace('-', ' ')}
                       </button>
@@ -270,33 +283,45 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
               exit={{ opacity: 0, scale: 0.9 }}
               className="flex flex-col items-center justify-center text-center py-20"
             >
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 border border-white/10">
+              <div className="w-16 h-16 rounded-full bg-[#4F9EFF]/5 flex items-center justify-center mb-4 border border-[#4F9EFF]/10">
                 <Search className="w-6 h-6 text-gray-500" />
               </div>
               <p className="text-lg text-white font-medium">No events found</p>
-              <p className="text-sm text-gray-500 mt-1 max-w-sm">Try adjusting your filters or search terms to find what you're looking for.</p>
+              <p className="text-sm text-gray-500 mt-1 max-w-sm">Try adjusting your filters or search terms to find what you&apos;re looking for.</p>
             </motion.div>
           ) : (
             <motion.div
               key="grid-view"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.08, delayChildren: 0.1 }
+                }
+              }}
               className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[380px]"
             >
               {filteredEvents.map((event, idx) => {
-                // Determine bento sizing
-                // Make the 1st item of every 5-item group large, except if filtered count <= 2
                 const isLarge = (idx % 5 === 0) && filteredEvents.length > 2;
                 
                 return (
-                  <MinimalEventCard 
-                    key={event.slug} 
-                    event={event} 
-                    index={idx} 
-                    isLarge={isLarge}
-                  />
+                  <motion.div
+                    key={event.slug}
+                    variants={{
+                      hidden: { opacity: 0, y: 40, scale: 0.96 },
+                      visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                    }}
+                    className={isLarge ? "md:col-span-2 md:row-span-1" : "col-span-1 row-span-1"}
+                  >
+                    <MinimalEventCard 
+                      event={event} 
+                      index={idx} 
+                      isLarge={isLarge}
+                    />
+                  </motion.div>
                 );
               })}
 

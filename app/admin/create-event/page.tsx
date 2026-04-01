@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
+import FormBuilder, { FormField } from "@/components/FormBuilder";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function CreateEventPage() {
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
 
   const [winners, setWinners] = useState([{ rank: "1st", teamName: "", members: "", photo: "" }]);
+  const [formFields, setFormFields] = useState<FormField[]>([]);
 
   function handleWinnerChange(index: number, field: string, value: string) {
     const newWinners = [...winners];
@@ -45,7 +47,7 @@ export default function CreateEventPage() {
     // Generate an ID from the title
     const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
 
-    const newEvent: any = {
+    const newEvent: EventItem = {
       id,
       title,
       description: formData.get("description") as string,
@@ -59,6 +61,9 @@ export default function CreateEventPage() {
 
     if (status === "upcoming") {
       newEvent.registrationOpen = category === "workshop" ? false : registrationOpen;
+      if (formFields.length > 0) {
+        newEvent.formSchema = formFields;
+      }
     } else {
       newEvent.gallery = galleryUrls.filter(Boolean);
       
@@ -86,17 +91,17 @@ export default function CreateEventPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#050505] text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <Link 
           href="/admin" 
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-[#4F9EFF] transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </Link>
         
-        <h1 className="text-3xl font-bold mb-8">Create New Event</h1>
+        <h1 className="text-3xl font-bold mb-8 text-[#4F9EFF]">Create New Event</h1>
         
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400">
@@ -104,27 +109,32 @@ export default function CreateEventPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-zinc-900/50 p-8 rounded-2xl border border-zinc-800">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-zinc-900/50 p-8 rounded-2xl border border-[#4F9EFF]/10">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-zinc-400 mb-2">Event Title</label>
-            <input type="text" id="title" name="title" required className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+            <input type="text" id="title" name="title" required className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors" />
           </div>
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-zinc-400 mb-2">Description</label>
-            <textarea id="description" name="description" required rows={4} className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+            <textarea id="description" name="description" required rows={4} className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="date" className="block text-sm font-medium text-zinc-400 mb-2">Date</label>
-              <input type="date" id="date" name="date" required className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors [color-scheme:dark]" />
+              <input type="date" id="date" name="date" required className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors [color-scheme:dark]" />
             </div>
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-zinc-400 mb-2">Location</label>
-              <input type="text" id="location" name="location" required className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+              <label htmlFor="time" className="block text-sm font-medium text-zinc-400 mb-2">Time (optional)</label>
+              <input type="text" id="time" name="time" placeholder="e.g. 10:00 AM - 6:00 PM" className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors" />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-zinc-400 mb-2">Location</label>
+            <input type="text" id="location" name="location" required className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors" />
           </div>
 
           <div>
@@ -146,7 +156,7 @@ export default function CreateEventPage() {
                 name="status"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as "upcoming" | "past")}
-                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors"
               >
                 <option value="upcoming">Upcoming</option>
                 <option value="past">Past</option>
@@ -160,7 +170,7 @@ export default function CreateEventPage() {
                 name="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4F9EFF] transition-colors"
               >
                 <option value="hackathon">Hackathon</option>
                 <option value="workshop">Workshop</option>
@@ -173,18 +183,24 @@ export default function CreateEventPage() {
 
           {/* Dynamic Fields */}
           {status === "upcoming" && category !== "workshop" && (
-            <div className="flex items-center gap-3 bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
-              <input 
-                type="checkbox" 
-                id="registrationOpen" 
-                checked={registrationOpen}
-                onChange={(e) => setRegistrationOpen(e.target.checked)}
-                className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 text-blue-600 focus:ring-blue-500"
-              />
-              <label htmlFor="registrationOpen" className="font-medium text-zinc-200 cursor-pointer">
-                Registration Open
-              </label>
-            </div>
+            <>
+              <div className="flex items-center gap-3 bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                <input 
+                  type="checkbox" 
+                  id="registrationOpen" 
+                  checked={registrationOpen}
+                  onChange={(e) => setRegistrationOpen(e.target.checked)}
+                  className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 text-[#4F9EFF] focus:ring-[#4F9EFF]"
+                />
+                <label htmlFor="registrationOpen" className="font-medium text-zinc-200 cursor-pointer">
+                  Registration Open
+                </label>
+              </div>
+
+              <div className="bg-zinc-800/30 p-6 rounded-lg border border-[#4F9EFF]/10">
+                <FormBuilder value={formFields} onChange={setFormFields} />
+              </div>
+            </>
           )}
 
           {status === "past" && (
@@ -284,7 +300,7 @@ export default function CreateEventPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#4F9EFF] hover:bg-[#4F9EFF]/80 text-black font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Creating..." : "Create Event"}
           </button>

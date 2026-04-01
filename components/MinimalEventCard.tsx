@@ -210,11 +210,11 @@ export default function MinimalEventCard({
               {month} {day}, {year}
             </span>
             {isUpcoming && (
-              <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-widest font-bold text-black bg-white">
+              <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-widest font-bold text-black bg-[#4F9EFF]">
                 Active
               </span>
             )}
-            <span className="ml-auto px-2 py-0.5 rounded-full border border-white/10 text-[10px] uppercase tracking-wider text-white/60 bg-white/5 backdrop-blur-sm">
+            <span className="ml-auto px-2 py-0.5 rounded-full border border-[#4F9EFF]/20 text-[10px] uppercase tracking-wider text-[#4F9EFF]/70 bg-[#4F9EFF]/5 backdrop-blur-sm">
               {event.category ? event.category.replace('-', ' ') : 'Event'}
             </span>
           </div>
@@ -224,8 +224,8 @@ export default function MinimalEventCard({
             <h3 
               className={`font-bold text-white mb-2 tracking-tight transition-colors duration-300 font-['Inter'] ${isLarge ? 'text-3xl' : 'text-2xl'}`}
               style={{
-                color: (isHovered && event.slug === 'hackforce') ? 'rgba(0, 255, 0, 0.9)' : '',
-                textShadow: (isHovered && event.slug === 'hackforce') ? '0 0 10px rgba(0, 255, 0, 0.3)' : (isHovered && event.slug === 'hackquanta') ? '0 0 20px rgba(139, 92, 246, 0.4)' : ''
+                color: (isHovered && event.slug === 'hackforce') ? 'rgba(255, 140, 0, 0.9)' : '',
+                textShadow: (isHovered && event.slug === 'hackforce') ? '0 0 10px rgba(255, 140, 0, 0.3)' : (isHovered && event.slug === 'hackquanta') ? '0 0 20px rgba(79, 158, 255, 0.4)' : ''
               }}
             >
               {scrambledTitle}
@@ -236,7 +236,7 @@ export default function MinimalEventCard({
             </p>
 
             {/* Footer Metrics */}
-            <div className="flex items-center gap-4 mt-6 pt-5 border-t border-white/10 text-xs text-white/40 font-medium">
+            <div className="flex items-center gap-4 mt-6 pt-5 border-t border-[#4F9EFF]/10 text-xs text-[#ededed]/40 font-medium">
               {(event.location || event.time) && (
                 <div className="flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5" />
@@ -247,8 +247,8 @@ export default function MinimalEventCard({
               <div 
                 className="flex items-center gap-1.5 ml-auto transition-colors"
                 style={{
-                  color: (isHovered && event.slug === 'blockgen') ? '#FFD700' : '',
-                  textShadow: (isHovered && event.slug === 'blockgen') ? '0 0 10px rgba(255, 215, 0, 0.3)' : ''
+                  color: (isHovered && event.slug === 'blockgen') ? '#FF8C00' : '',
+                  textShadow: (isHovered && event.slug === 'blockgen') ? '0 0 10px rgba(255, 140, 0, 0.3)' : ''
                 }}
               >
                 <Users className="w-3.5 h-3.5" />

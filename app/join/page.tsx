@@ -13,7 +13,7 @@ export default async function JoinPage() {
   if (settings.hideJoin) {
     return (
       <main className="text-center min-h-[60vh] flex flex-col justify-center items-center px-4">
-        <h1 className="text-3xl font-bold sm:text-4xl text-[#00F2FF]">RECRUITMENT CLOSED</h1>
+        <h1 className="text-3xl font-bold sm:text-4xl text-[#4F9EFF]">RECRUITMENT CLOSED</h1>
         <p className="mt-4 text-[#ededed]/70 max-w-md">
           The intake system is currently offline. We are not accepting new members at this time.
         </p>

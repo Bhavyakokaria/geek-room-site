@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Film, Image } from "lucide-react";
 
@@ -9,15 +9,13 @@ interface MediaArchiveProps {
 }
 
 export default function MediaArchive({ images }: MediaArchiveProps) {
-  const [duplicatedImages, setDuplicatedImages] = useState<string[]>([]);
   const [isHovered, setIsHovered] = useState(false);
 
   // Duplicate images to create seamless loop
-  useEffect(() => {
-    if (images.length === 0) return;
+  const duplicatedImages = useMemo(() => {
+    if (images.length === 0) return [];
     // Duplicate enough times to fill the screen and create smooth loop
-    const dupes = [...images, ...images, ...images, ...images];
-    setDuplicatedImages(dupes);
+    return [...images, ...images, ...images, ...images];
   }, [images]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -27,7 +25,7 @@ export default function MediaArchive({ images }: MediaArchiveProps) {
 
     if (isVideo) {
       return (
-        <div key={`${src}-${index}`} className="relative flex-shrink-0 w-48 h-32 md:w-64 md:h-40 overflow-hidden rounded-lg border border-[#00F2FF]/20 bg-[#0a0a0a]">
+        <div key={`${src}-${index}`} className="relative flex-shrink-0 w-48 h-32 md:w-64 md:h-40 overflow-hidden rounded-lg border border-[#4F9EFF]/20 bg-[#0a0a0a]">
           <video
             src={src}
             className="w-full h-full object-cover"
@@ -37,10 +35,10 @@ export default function MediaArchive({ images }: MediaArchiveProps) {
             autoPlay={!isHovered}
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity">
-            <Film className="h-6 w-6 text-[#00F2FF]" />
+            <Film className="h-6 w-6 text-[#4F9EFF]" />
           </div>
           {/* Tech corner */}
-          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#00F2FF]/50" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#4F9EFF]/50" />
         </div>
       );
     }
@@ -73,9 +71,9 @@ export default function MediaArchive({ images }: MediaArchiveProps) {
     >
       {/* Section Header */}
       <div className="flex items-center justify-center gap-4 mb-6">
-        <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#00F2FF]/50" />
+        <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#4F9EFF]/50" />
         <div className="flex items-center gap-2">
-          <Film className="h-5 w-5 text-[#00F2FF] animate-pulse" />
+          <Film className="h-5 w-5 text-[#4F9EFF] animate-pulse" />
           <h3 className="text-lg md:text-xl font-bold uppercase tracking-widest text-white">
             Media Archive
           </h3>
@@ -88,7 +86,7 @@ export default function MediaArchive({ images }: MediaArchiveProps) {
       <div className="flex justify-center gap-6 mb-6">
         <div className="text-center">
           <span className="block text-xs font-mono text-white/40 uppercase tracking-wider">Media Count</span>
-          <span className="block text-sm font-bold text-[#00F2FF]">{images.length.toString().padStart(2, '0')}</span>
+          <span className="block text-sm font-bold text-[#4F9EFF]">{images.length.toString().padStart(2, '0')}</span>
         </div>
         <div className="text-center">
           <span className="block text-xs font-mono text-white/40 uppercase tracking-wider">Status</span>
@@ -131,7 +129,7 @@ export default function MediaArchive({ images }: MediaArchiveProps) {
           {Array.from({ length: 8 }).map((_, i) => (
             <motion.div
               key={i}
-              className="h-0.5 w-1 bg-[#00F2FF]/30"
+              className="h-0.5 w-1 bg-[#4F9EFF]/30"
               animate={{
                 opacity: [0.3, 1, 0.3],
                 scale: [1, 1, 1]

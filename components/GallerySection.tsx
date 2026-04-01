@@ -10,7 +10,7 @@ function TechPattern() {
     <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="techPattern" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#00F2FF" strokeWidth="0.5"/>
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#4F9EFF" strokeWidth="0.5"/>
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#techPattern)" />
@@ -88,9 +88,9 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <ImageIcon className="h-6 w-6 text-[#00F2FF]" />
+              <ImageIcon className="h-6 w-6 text-[#4F9EFF]" />
             </motion.div>
-            <div className="absolute inset-0 blur-md bg-[#00F2FF]/30" />
+            <div className="absolute inset-0 blur-md bg-[#4F9EFF]/30" />
           </div>
           <h2 className="text-2xl md:text-3xl font-black uppercase tracking-widest text-white">
             {title}
@@ -106,7 +106,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
             {[...Array(4)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-1 h-4 bg-[#00F2FF]"
+                className="w-1 h-4 bg-[#4F9EFF]"
                 animate={{
                   scaleY: [0.3, 1, 0.3],
                   opacity: [0.5, 1, 0.5]
@@ -142,7 +142,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
             >
               {/* Image Container with 3D Tilt Effect */}
               <motion.div
-                className="relative aspect-square overflow-hidden rounded-lg border border-[#00F2FF]/20 bg-[#0a0a0a]"
+                className="relative aspect-square overflow-hidden rounded-lg border border-[#4F9EFF]/20 bg-[#0a0a0a]"
                 style={{
                   transform: `perspective(1000px) rotateX(${cardTilt.x}deg) rotateY(${cardTilt.y}deg)`,
                   transformStyle: "preserve-3d",
@@ -168,7 +168,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
                 {!isLoaded && (
                   <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0a]">
                     <motion.div
-                      className="w-8 h-8 border-2 border-[#00F2FF] border-t-transparent rounded-full"
+                      className="w-8 h-8 border-2 border-[#4F9EFF] border-t-transparent rounded-full"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity }}
                     />
@@ -193,9 +193,9 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
                     <motion.div
                       initial={{ scale: 0 }}
                       whileHover={{ scale: 1.2 }}
-                      className="bg-[#00F2FF]/20 backdrop-blur-sm border border-[#00F2FF] rounded-full p-3"
+                      className="bg-[#4F9EFF]/20 backdrop-blur-sm border border-[#4F9EFF] rounded-full p-3"
                     >
-                      <Maximize className="h-5 w-5 text-[#00F2FF]" />
+                      <Maximize className="h-5 w-5 text-[#4F9EFF]" />
                     </motion.div>
                   </div>
 
@@ -206,17 +206,17 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
                         IMG_{(index + 1).toString().padStart(3, "0")}
                       </span>
                       <div className="flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#00F2FF] animate-pulse" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#4F9EFF] animate-pulse" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Tech Corners */}
-                <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-[#00F2FF]/40 group-hover:border-[#00F2FF] transition-colors rounded-tl" />
+                <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-[#4F9EFF]/40 group-hover:border-[#4F9EFF] transition-colors rounded-tl" />
                 <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-[#FF8C00]/40 group-hover:border-[#FF8C00] transition-colors rounded-tr" />
                 <div className="absolute bottom-0 left-0 w-6 h-6 border-b border-l border-[#FF8C00]/40 group-hover:border-[#FF8C00] transition-colors rounded-bl" />
-                <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-[#00F2FF]/40 group-hover:border-[#00F2FF] transition-colors rounded-br" />
+                <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-[#4F9EFF]/40 group-hover:border-[#4F9EFF] transition-colors rounded-br" />
               </motion.div>
 
               {/* Glow Floor */}
@@ -230,7 +230,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
               />
 
               {/* Index Badge */}
-              <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm border border-[#00F2FF]/30 rounded px-2 py-1 text-[10px] font-mono text-[#00F2FF]">
+              <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm border border-[#4F9EFF]/30 rounded px-2 py-1 text-[10px] font-mono text-[#4F9EFF]">
                 #{(index + 1).toString().padStart(2, "0")}
               </div>
             </motion.div>
@@ -269,7 +269,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
                 exit={{ x: -20, opacity: 0 }}
                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
                 aria-label="Previous image"
-                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 border border-[#00F2FF] text-[#00F2FF] rounded-full p-3 transition-colors cursor-pointer"
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-[#4F9EFF]/20 hover:bg-[#4F9EFF]/30 border border-[#4F9EFF] text-[#4F9EFF] rounded-full p-3 transition-colors cursor-pointer"
               >
                 <ChevronLeft className="h-6 w-6" />
               </motion.button>
@@ -280,7 +280,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
                 exit={{ x: 20, opacity: 0 }}
                 onClick={(e) => { e.stopPropagation(); nextImage(); }}
                 aria-label="Next image"
-                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 border border-[#00F2FF] text-[#00F2FF] rounded-full p-3 transition-colors cursor-pointer"
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-[#4F9EFF]/20 hover:bg-[#4F9EFF]/30 border border-[#4F9EFF] text-[#4F9EFF] rounded-full p-3 transition-colors cursor-pointer"
               >
                 <ChevronRight className="h-6 w-6" />
               </motion.button>
@@ -305,7 +305,7 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
                   priority
                 />
                 {/* Glow border around lightbox image */}
-                <div className="absolute inset-0 rounded-lg border-2 border-[#00F2FF]/30 shadow-[0_0_50px_rgba(0,242,255,0.3)] pointer-events-none" />
+                <div className="absolute inset-0 rounded-lg border-2 border-[#4F9EFF]/30 shadow-[0_0_50px_rgba(0,242,255,0.3)] pointer-events-none" />
               </motion.div>
 
               {/* Image Counter */}
@@ -320,14 +320,14 @@ export default function GallerySection({ images, title = "Event Gallery", imageL
       {/* Decorative Bottom Line */}
       <div className="relative z-10 mt-8 flex justify-center">
         <div className="flex items-center gap-2">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#00F2FF]" />
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#4F9EFF]" />
           <motion.div
             animate={{
               scale: [1, 1.5, 1],
               opacity: [0.5, 1, 0.5]
             }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="w-2 h-2 rounded-full bg-[#00F2FF]"
+            className="w-2 h-2 rounded-full bg-[#4F9EFF]"
           />
           <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#FF8C00]" />
         </div>

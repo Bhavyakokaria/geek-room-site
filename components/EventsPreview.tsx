@@ -77,10 +77,10 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
               transition={{ duration: 0.6 }}
               className="flex items-center gap-3 mb-6"
             >
-              <div className="h-px w-8" style={{ backgroundColor: "#00F2FF" }} />
+              <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
               <span
                 className="text-xs font-medium tracking-[0.2em] uppercase"
-                style={{ color: "#00F2FF", fontFamily: "'Inter', sans-serif" }}
+                style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
               >
                 Signature Events
               </span>
@@ -118,7 +118,7 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
                 fontFamily: "'Inter', sans-serif",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#00F2FF";
+                (e.currentTarget as HTMLElement).style.color = "#4F9EFF";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
@@ -171,18 +171,18 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
             className="group inline-flex items-center gap-3 px-8 py-4 rounded-full font-medium text-sm transition-all duration-300"
             style={{
               border: "1.5px solid rgba(0,242,255,0.25)",
-              color: "#00F2FF",
+              color: "#4F9EFF",
               fontFamily: "'Inter', sans-serif",
               letterSpacing: "0.01em",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "#00F2FF";
+              (e.currentTarget as HTMLElement).style.backgroundColor = "#4F9EFF";
               (e.currentTarget as HTMLElement).style.color = "#050505";
-              (e.currentTarget as HTMLElement).style.borderColor = "#00F2FF";
+              (e.currentTarget as HTMLElement).style.borderColor = "#4F9EFF";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-              (e.currentTarget as HTMLElement).style.color = "#00F2FF";
+              (e.currentTarget as HTMLElement).style.color = "#4F9EFF";
               (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,242,255,0.25)";
             }}
           >
