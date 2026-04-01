@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getEvents } from "@/app/actions/eventActions";
+import { getEvents, EventItem } from "@/app/actions/eventActions";
 import EventsClient from "./EventsClient";
 import ScrambleText from "@/components/ScrambleText";
 import { TechDecorations } from "@/components/TechDecorations";
@@ -55,7 +55,7 @@ function TechBackground() {
 export default async function EventsPage() {
   const customEvents = await getEvents();
   
-  const mappedEvents: EventDetails[] = customEvents.map((e: any) => ({
+  const mappedEvents: EventDetails[] = customEvents.map((e: EventItem) => ({
     slug: e.id,
     title: e.title,
     date: e.date,

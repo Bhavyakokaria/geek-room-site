@@ -23,8 +23,9 @@ export default function RoleManagerClient({
         
         // Clear success message after 3 seconds
         setTimeout(() => setStatusMessage(null), 3000);
-      } catch (error: any) {
-        setStatusMessage({ type: "error", text: error.message || "Failed to update role." });
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Failed to update role.";
+        setStatusMessage({ type: "error", text: errorMessage });
       }
     });
   };

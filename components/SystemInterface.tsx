@@ -42,10 +42,6 @@ export function SystemInterface() {
     return () => clearTimeout(timeout);
   }, [text, isDeleting, phraseIndex]);
 
-  useEffect(() => {
-    setText("> ");
-  }, []);
-
   const panels = [
     { title: "BUILD", icon: <Terminal className="w-6 h-6" />, desc: "Shipping real-world projects" },
     { title: "INNOVATE", icon: <Zap className="w-6 h-6" />, desc: "Hackathons & experiments" },

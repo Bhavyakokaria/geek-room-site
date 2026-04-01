@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import fs from "fs";
+import path from "path";
 
 export type Winner = {
   rank: string;
@@ -24,7 +26,7 @@ export type EventItem = {
   registrationOpen?: boolean;
   gallery?: string[];
   winners?: Winner[];
-  formSchema?: any;
+  formSchema?: unknown;
 };
 
 export async function addEvent(eventData: EventItem) {
@@ -59,9 +61,10 @@ export async function addEvent(eventData: EventItem) {
     revalidatePath("/admin");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Failed to add event:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -102,9 +105,10 @@ export async function updateEvent(id: string, eventData: Partial<EventItem>) {
     revalidatePath("/admin");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Failed to update event:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -117,9 +121,10 @@ export async function deleteEvent(id: string) {
     revalidatePath("/gallery");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Failed to delete event:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -142,9 +147,10 @@ export async function registerForEvent(registrationData: {
     });
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Registration failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -152,8 +158,6 @@ export async function getEvents(): Promise<EventItem[]> {
   try {
     if (!process.env.DATABASE_URL) {
       console.warn("DATABASE_URL is missing. Falling back to local events.json");
-      const fs = require('fs');
-      const path = require('path');
       const dataPath = path.join(process.cwd(), 'data', 'events.json');
       if (fs.existsSync(dataPath)) {
         return JSON.parse(fs.readFileSync(dataPath, 'utf-8')) as EventItem[];
@@ -169,8 +173,8 @@ export async function getEvents(): Promise<EventItem[]> {
     const todayDate = new Date();
     todayDate.setHours(0,0,0,0);
 
-    const upcoming: any[] = [];
-    const past: any[] = [];
+    const upcoming: EventItem[] = [];
+    const past: EventItem[] = [];
 
     for (const e of rawEvents) {
       let status = e.status;
@@ -182,14 +186,14 @@ export async function getEvents(): Promise<EventItem[]> {
         prisma.event.update({ where: { id: e.id }, data: { status: "past" } }).catch(console.error);
       }
 
-      const formatted = {
+      const formatted: EventItem = {
         ...e,
         date: e.date.toISOString().split('T')[0] || e.date.toISOString(), 
         status: status as "upcoming" | "past",
         category: e.category || undefined,
         time: e.time || undefined,
         registrationLink: e.registrationLink || undefined,
-        winners: e.winners.map((w: any) => ({
+        winners: e.winners.map((w: { rank: string; teamName: string; members: string[]; photo: string | null }) => ({
           rank: w.rank,
           teamName: w.teamName,
           members: w.members,
@@ -208,7 +212,7 @@ export async function getEvents(): Promise<EventItem[]> {
     past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return [...upcoming, ...past] as EventItem[];
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch events", error);
     return [];
   }
@@ -219,11 +223,11 @@ export async function getEvents(): Promise<EventItem[]> {
 export type FormSubmissionData = {
   id: string;
   eventId: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   submitted: string;
 };
 
-export async function submitFormResponse(eventId: string, formData: Record<string, any>) {
+export async function submitFormResponse(eventId: string, formData: Record<string, unknown>) {
   try {
     await prisma.formSubmission.create({
       data: {
@@ -232,9 +236,10 @@ export async function submitFormResponse(eventId: string, formData: Record<strin
       },
     });
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Form submission failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -244,13 +249,13 @@ export async function getFormSubmissions(eventId: string): Promise<FormSubmissio
       where: { eventId },
       orderBy: { submitted: "desc" },
     });
-    return submissions.map(s => ({
+    return submissions.map((s: { id: string; eventId: string; data: unknown; submitted: Date }) => ({
       id: s.id,
       eventId: s.eventId,
-      data: s.data as Record<string, any>,
+      data: s.data as Record<string, unknown>,
       submitted: s.submitted.toISOString(),
     }));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch submissions:", error);
     return [];
   }
@@ -268,23 +273,39 @@ export async function exportSubmissionsCSV(eventId: string): Promise<string> {
   try {
     const event = await prisma.event.findUnique({
       where: { id: eventId },
-      include: { submissions: { orderBy: { submitted: "desc" } } },
+      select: {
+        id: true,
+        formSchema: true,
+        submissions: {
+          orderBy: { submitted: "desc" },
+          select: {
+            data: true,
+            submitted: true,
+            id: true
+          }
+        }
+      }
     });
 
-    if (!event || event.submissions.length === 0) return "";
+    if (!event || !event.submissions || event.submissions.length === 0) return "";
 
-    const schema = event.formSchema as any[] | null;
+    // Check if formSchema exists, if not use default fields
+    interface FormField {
+      id: string;
+      label: string;
+    }
+    const schema = event.formSchema ? (event.formSchema as unknown as FormField[]) : null;
     const fieldLabels = schema
-      ? schema.map((f: any) => f.label)
+      ? schema.map((f: FormField) => f.label)
       : ["Name", "Email", "Phone", "College"];
 
     const fieldKeys = schema
-      ? schema.map((f: any) => f.id)
+      ? schema.map((f: FormField) => f.id)
       : ["name", "email", "phone", "college"];
 
     const header = ["#", "Submitted At", ...fieldLabels].join(",");
-    const rows = event.submissions.map((s, i) => {
-      const data = s.data as Record<string, any>;
+    const rows = event.submissions.map((s: { data: unknown; submitted: Date }, i: number) => {
+      const data = s.data as Record<string, unknown>;
       const values = fieldKeys.map((key: string) => {
         const val = data[key] ?? "";
         const str = Array.isArray(val) ? val.join("; ") : String(val);
@@ -294,7 +315,7 @@ export async function exportSubmissionsCSV(eventId: string): Promise<string> {
     });
 
     return [header, ...rows].join("\n");
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("CSV export failed:", error);
     return "";
   }

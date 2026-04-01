@@ -67,13 +67,13 @@ export default function RegisterForm({
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const responseData: Record<string, any> = {};
+    const responseData: Record<string, unknown> = {};
 
     for (const field of fields) {
       if (field.type === "file") {
         responseData[field.id] = fileData[field.id] || "";
       } else {
-        responseData[field.id] = formData.get(field.id) as string || "";
+        responseData[field.id] = (formData.get(field.id) as string) || "";
       }
     }
 

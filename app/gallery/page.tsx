@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getEvents } from "@/app/actions/eventActions";
+import { getEvents, EventItem } from "@/app/actions/eventActions";
 import GalleryClient from "./GalleryClient";
 import { EventDetails } from "../events/data";
 
@@ -17,7 +17,7 @@ export default async function GalleryPage() {
   // The original component expects event structure roughly equivalent to EventDetails.
   const mappedEvents: EventDetails[] = customEvents
     .filter(e => e.status === "past")
-    .map((e: any) => ({
+    .map((e: EventItem) => ({
       slug: e.id,
       title: e.title,
       date: e.date,

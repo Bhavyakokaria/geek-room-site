@@ -45,9 +45,10 @@ export default function ImageUpload({ value, onChange, folder = "events" }: Imag
         .getPublicUrl(filePath);
 
       onChange(publicUrlData.publicUrl);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error uploading image:", err);
-      setError(err.message || "Failed to upload image.");
+      const errorMessage = err instanceof Error ? err.message : "Failed to upload image.";
+      setError(errorMessage);
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Hammer, Zap, Users } from "lucide-react";
 
 const PILLARS = [
@@ -27,12 +27,12 @@ const PILLARS = [
   },
 ];
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
@@ -113,7 +113,7 @@ export function WhySection() {
               }}
             >
               Geek Room is where JEMTEC students with ambition find their people, sharpen their
-              craft, and build things they're proud of.
+              craft, and build things they&apos;re proud of.
             </motion.p>
 
             {/* Decorative quote line */}
@@ -134,7 +134,7 @@ export function WhySection() {
                   fontWeight: 500,
                 }}
               >
-                "The best way to learn tech is to build something that matters."
+                &quot;The best way to learn tech is to build something that matters.&quot;
               </p>
             </motion.div>
           </div>

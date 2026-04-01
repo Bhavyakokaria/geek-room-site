@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useScroll, useSpring, useTransform, motion } from "framer-motion";
+import { useScroll, useSpring, useTransform, motion, MotionValue } from "framer-motion";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
@@ -169,7 +169,7 @@ export function LogoSequence() {
   );
 }
 
-function Beat({ progress, range, title, subtitle }: { progress: any, range: number[], title: string, subtitle: string }) {
+function Beat({ progress, range, title, subtitle }: { progress: MotionValue<number>, range: number[], title: string, subtitle: string }) {
   const opacity = useTransform(progress, range, [0, 1, 1, 0]);
   const y = useTransform(progress, range, [30, 0, 0, -30]);
 
@@ -188,7 +188,7 @@ function Beat({ progress, range, title, subtitle }: { progress: any, range: numb
   );
 }
 
-function BeatD({ progress, range, isSignedIn }: { progress: any, range: number[], isSignedIn: boolean }) {
+function BeatD({ progress, range, isSignedIn }: { progress: MotionValue<number>, range: number[], isSignedIn: boolean }) {
   const opacity = useTransform(progress, range, [0, 1, 1, 1]);
   const y = useTransform(progress, range, [30, 0, 0, 0]);
 

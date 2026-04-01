@@ -107,6 +107,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
         <motion.div
           style={{ y: featuredY, opacity: featuredOpacity }}
           className="w-full max-w-5xl rounded-3xl border border-[#4F9EFF]/10 bg-[#0A0A0A]/40 backdrop-blur-2xl overflow-hidden relative shadow-[0_8px_30px_rgb(0,0,0,0.12)] group"
+          >
           
           <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] min-h-[350px]">
             {/* Content Side */}
@@ -170,9 +171,9 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
               <div className="absolute top-4 right-4 bg-[#4F9EFF]/10 backdrop-blur-md border border-[#4F9EFF]/20 rounded-full px-3 py-1 text-[10px] font-medium text-[#4F9EFF] uppercase tracking-wider">
                 {isUpcoming ? "Featured" : "Archive"}
           </div>
-        </motion.div>
-      </div>
+          </div>
         </div>
+        </motion.div>
       </div>
 
       {/* ============== FILTER & CONTROLS ============== */}
@@ -286,7 +287,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                 <Search className="w-6 h-6 text-gray-500" />
               </div>
               <p className="text-lg text-white font-medium">No events found</p>
-              <p className="text-sm text-gray-500 mt-1 max-w-sm">Try adjusting your filters or search terms to find what you're looking for.</p>
+              <p className="text-sm text-gray-500 mt-1 max-w-sm">Try adjusting your filters or search terms to find what you&apos;re looking for.</p>
             </motion.div>
           ) : (
             <motion.div

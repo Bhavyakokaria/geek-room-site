@@ -5,24 +5,34 @@ import Link from "next/link";
 import { ArrowLeft, Download } from "lucide-react";
 import ResponsesClient from "./ResponsesClient";
 
+interface FormField {
+  id: string;
+  label: string;
+}
+
 export default async function EventResponsesPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
+    select: {
+      id: true,
+      formSchema: true,
+      title: true,
+    }
   });
 
   if (!event) notFound();
-
+  
   const submissions = await getFormSubmissions(eventId);
-  const formSchema = event.formSchema as any[] | null;
+  const formSchema = event.formSchema as unknown as FormField[] | null;
 
   const fieldLabels = formSchema
-    ? formSchema.map((f: any) => f.label)
+    ? formSchema.map((f: FormField) => f.label)
     : ["Name", "Email", "Phone", "College"];
 
   const fieldKeys = formSchema
-    ? formSchema.map((f: any) => f.id)
+    ? formSchema.map((f: FormField) => f.id)
     : ["name", "email", "phone", "college"];
 
   return (

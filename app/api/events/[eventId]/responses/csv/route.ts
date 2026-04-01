@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { exportSubmissionsCSV } from "@/app/actions/eventActions";
 
 export async function GET(
@@ -10,10 +10,10 @@ export async function GET(
   const csv = await exportSubmissionsCSV(eventId);
 
   if (!csv) {
-    return new NextResponse("No submissions found", { status: 404 });
+    return new Response("No submissions found", { status: 404 });
   }
 
-  return new NextResponse(csv, {
+  return new Response(csv, {
     status: 200,
     headers: {
       "Content-Type": "text/csv",

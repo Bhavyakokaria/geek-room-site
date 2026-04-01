@@ -47,7 +47,7 @@ export default function CreateEventPage() {
     // Generate an ID from the title
     const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
 
-    const newEvent: any = {
+    const newEvent: EventItem = {
       id,
       title,
       description: formData.get("description") as string,

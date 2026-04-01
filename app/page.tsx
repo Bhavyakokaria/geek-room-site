@@ -1,4 +1,4 @@
-import HeroLogoAnimation from "@/components/HeroLogoAnimation";
+
 import { HeroSection } from "@/components/HeroSection";
 import { WhySection } from "@/components/WhySection";
 import { TeamPreview } from "@/components/TeamPreview";
