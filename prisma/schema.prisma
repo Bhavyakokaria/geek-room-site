@@ -20,11 +20,13 @@ model Event {
   time             String?
   registrationOpen Boolean             @default(true)
   gallery          String[]            // array of image URLs
+  formSchema       Json?               // Dynamic form field definitions
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
 
   winners          Winner[]
   registrations    EventRegistration[]
+  submissions      FormSubmission[]
 }
 
 model Winner {
@@ -67,4 +69,15 @@ model Setting {
   key         String   @unique
   value       String   // JSON stringified value
   updatedAt   DateTime @updatedAt
+}
+
+model FormSubmission {
+  id        String   @id @default(uuid())
+  eventId   String
+  data      Json     // All form responses as key-value pairs
+  submitted DateTime @default(now())
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
 }

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
+import FormBuilder, { FormField } from "@/components/FormBuilder";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function CreateEventPage() {
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
 
   const [winners, setWinners] = useState([{ rank: "1st", teamName: "", members: "", photo: "" }]);
+  const [formFields, setFormFields] = useState<FormField[]>([]);
 
   function handleWinnerChange(index: number, field: string, value: string) {
     const newWinners = [...winners];
@@ -59,6 +61,9 @@ export default function CreateEventPage() {
 
     if (status === "upcoming") {
       newEvent.registrationOpen = category === "workshop" ? false : registrationOpen;
+      if (formFields.length > 0) {
+        newEvent.formSchema = formFields;
+      }
     } else {
       newEvent.gallery = galleryUrls.filter(Boolean);
       
@@ -178,18 +183,24 @@ export default function CreateEventPage() {
 
           {/* Dynamic Fields */}
           {status === "upcoming" && category !== "workshop" && (
-            <div className="flex items-center gap-3 bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
-              <input 
-                type="checkbox" 
-                id="registrationOpen" 
-                checked={registrationOpen}
-                onChange={(e) => setRegistrationOpen(e.target.checked)}
-                className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 text-[#4F9EFF] focus:ring-[#4F9EFF]"
-              />
-              <label htmlFor="registrationOpen" className="font-medium text-zinc-200 cursor-pointer">
-                Registration Open
-              </label>
-            </div>
+            <>
+              <div className="flex items-center gap-3 bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                <input 
+                  type="checkbox" 
+                  id="registrationOpen" 
+                  checked={registrationOpen}
+                  onChange={(e) => setRegistrationOpen(e.target.checked)}
+                  className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 text-[#4F9EFF] focus:ring-[#4F9EFF]"
+                />
+                <label htmlFor="registrationOpen" className="font-medium text-zinc-200 cursor-pointer">
+                  Registration Open
+                </label>
+              </div>
+
+              <div className="bg-zinc-800/30 p-6 rounded-lg border border-[#4F9EFF]/10">
+                <FormBuilder value={formFields} onChange={setFormFields} />
+              </div>
+            </>
           )}
 
           {status === "past" && (
