@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import LogoAnimation from "./LogoAnimation";
 import Robot3DBackground from "./Robot3DBackground";
 
 type TeamMember = {
@@ -101,10 +102,7 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
   ];
 
   useEffect(() => {
-    // Auto-trigger tour since LogoAnimation is removed
-    setTimeout(() => {
-      handleAnimationComplete();
-    }, 100);
+    document.body.style.overflow = "hidden";
 
     // Hero Quote Cycler
     const heroInterval = setInterval(() => {
@@ -263,47 +261,6 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
           85%  { transform: scale(1.02) translateY(-2px); }
           100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-
-        /* ── Sci-Fi Title Animation ── */
-        @keyframes cyberLetterIn {
-          0% { opacity: 0; transform: translateY(40px) rotateX(80deg) scale(0.8); }
-          100% { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); }
-        }
-        @keyframes sciFiUnderline {
-          0% { transform: scaleX(0); opacity: 0; filter: blur(4px); }
-          50% { opacity: 1; filter: blur(0px); }
-          100% { transform: scaleX(1); opacity: 0.7; }
-        }
-        .cyber-title {
-          font-family: 'Space Grotesk', sans-serif;
-          font-size: clamp(3rem, 10vw, 7rem);
-          font-weight: 700;
-          color: #ffffff;
-          line-height: 1;
-          margin: 0 auto 2.5rem;
-          text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.15);
-          position: relative;
-          display: inline-block;
-        }
-        .cyber-title span {
-          display: inline-block;
-          opacity: 0;
-          transform-origin: bottom center;
-          animation: cyberLetterIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .cyber-title::after {
-          content: '';
-          position: absolute;
-          bottom: -15px;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-          box-shadow: 0 0 15px rgba(255,255,255,0.6);
-          transform: scaleX(0);
-          transform-origin: center;
-          animation: sciFiUnderline 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s;
-        }
         /* Removed Mobile Menu CSS */
         @media (max-width: 1200px) { .leadership-grid { grid-template-columns: repeat(2, 1fr); } .team-grid { grid-template-columns: repeat(3, 1fr); } .values-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 992px) { .navbar { padding: 1rem 2rem; } .nav-links { display: none; } .mobile-menu-btn { display: flex; } .team-hero, .team-section, .values-section, .join-section { padding-left: 2rem; padding-right: 2rem; } .team-grid { grid-template-columns: repeat(2, 1fr); } .leadership-grid { gap: 2rem; } }
@@ -312,6 +269,8 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
       `}} />
 
       <Robot3DBackground />
+      <LogoAnimation onComplete={handleAnimationComplete} />
+
 
       <section className="team-hero">
         <div className="hero-bg">
@@ -320,19 +279,6 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
           <div className="hero-gradient-3"></div>
         </div>
         <div className="hero-content">
-          <h1 className="cyber-title">
-            {"THE OG TEAM".split("").map((char, i) => (
-              <span
-                key={i}
-                style={{
-                  animationDelay: `${0.1 + i * 0.04}s`,
-                  ...(char === " " ? { width: "0.4em" } : {})
-                }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </h1>
           <div className={`hero-dynamic-quote ${isQuoteFading ? 'fading' : ''}`}>
             {heroQuotes[heroQuoteIndex]}
           </div>

@@ -28,10 +28,10 @@ export default function ContactPage() {
               <div className="relative bg-[#050505] rounded-xl p-6 border border-white/5">
                 <h3 className="text-[#00F2FF] font-mono text-sm tracking-widest mb-2 uppercase">Comm-Link</h3>
                 <a
-                  href="mailto:geekroom@jimsemtc.in"
+                  href="mailto:geekroom.jimsemtc@gmail.com"
                   className="text-xl font-medium text-white hover:text-[#00F2FF] transition-colors gap-2 inline-flex items-center break-all"
                 >
-                  geekroom@jimsemtc.in
+                  geekroom.jimsemtc@gmail.com
                 </a>
               </div>
             </div>

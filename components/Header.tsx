@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import { X, Menu } from "lucide-react";
 
@@ -18,11 +18,13 @@ const navLinks = [
 
 export function Header({ hideJoin }: { hideJoin?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { user, isLoaded, isSignedIn } = useUser();
   const role = user?.publicMetadata?.role as string | undefined;
   const email = user?.primaryEmailAddress?.emailAddress;
-  const isAdminOrOwner = role === "admin" || role === "owner" || email === "sahilnwal975@gmail.com";
+  const isAdminOrOwner =
+    role === "admin" || role === "owner" || email === "sahilnwal975@gmail.com";
 
   const displayedLinks = navLinks.filter(
     (link) => !(hideJoin && link.href === "/join")
@@ -31,211 +33,418 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
     ? [...displayedLinks, { href: "/admin", label: "Admin" }]
     : displayedLinks;
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* ── shared capsule style builder ─────────────────────────── */
+  const capsuleBase: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    borderRadius: "9999px",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    transition: "all 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+  };
+
   return (
-    <header
-      className="fixed top-0 left-0 w-full z-50"
-      style={{
-        backgroundColor: "rgba(5,5,5,0.82)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-      }}
-    >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-12 h-16">
-        {/* Wordmark */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 min-h-[44px] min-w-[44px]"
-          style={{ textDecoration: "none" }}
+    <>
+      {/* ── global style injection ─────────────────────────────── */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+
+        .nav-link-item {
+          position: relative;
+          padding: 8px 15px;
+          border-radius: 9999px;
+          font-size: 0.9rem;
+          font-family: 'Inter', sans-serif;
+          font-weight: 500;
+          color: rgba(255,255,255,0.5);
+          text-decoration: none;
+          transition: color 0.2s, background 0.2s;
+          white-space: nowrap;
+        }
+        .nav-link-item:hover {
+          color: #ededed;
+          background: rgba(255,255,255,0.06);
+        }
+        .nav-link-item.active {
+          color: #ededed;
+          background: rgba(255,255,255,0.08);
+        }
+        .nav-link-item.active::after {
+          content: '';
+          position: absolute;
+          bottom: 3px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 18px;
+          height: 2px;
+          border-radius: 9999px;
+          background: #00F2FF;
+        }
+
+        /* scrolled capsule glow pulse */
+        @keyframes capsuleGlow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(0,242,255,0.08), 0 8px 32px rgba(0,0,0,0.55); }
+          50%       { box-shadow: 0 0 0 2px rgba(0,242,255,0.12), 0 8px 32px rgba(0,0,0,0.55); }
+        }
+        .scrolled-capsule {
+          animation: capsuleGlow 3s ease-in-out infinite;
+        }
+      `}</style>
+
+      <header
+        className="fixed top-0 left-0 w-full z-50"
+        style={{
+          /* header itself is transparent — capsules carry the bg */
+          background: "transparent",
+          pointerEvents: "none",
+        }}
+      >
+        {/* ── TOP STATE: three separate zones ─────────────────── */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            maxWidth: "1280px",
+            margin: "0 auto",
+            padding: "16px 28px",
+            pointerEvents: "auto",
+            opacity: scrolled ? 0 : 1,
+            transform: scrolled ? "translateY(-8px)" : "translateY(0)",
+            transition: "opacity 0.35s ease, transform 0.35s ease",
+            /* when scrolled hide but keep space so layout doesn't jump */
+            visibility: scrolled ? "hidden" : "visible",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+          }}
         >
-          <span
-            style={{
+          {/* LEFT — wordmark (no capsule) */}
+          <Link
+            href="/"
+            style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "1px" }}
+          >
+            <span style={{
               fontFamily: "'Syne', system-ui, sans-serif",
               fontWeight: 800,
-              fontSize: "1.1875rem",
+              fontSize: "1.35rem",
               color: "#ededed",
               letterSpacing: "-0.02em",
-            }}
-          >
-            GEEK
-          </span>
-          <span
-            style={{
+            }}>
+              GEEK
+            </span>
+            <span style={{
               fontFamily: "'Syne', system-ui, sans-serif",
               fontWeight: 800,
-              fontSize: "1.1875rem",
+              fontSize: "1.35rem",
               color: "#00F2FF",
               letterSpacing: "-0.02em",
+            }}>
+              ROOM
+            </span>
+          </Link>
+
+          {/* CENTER — nav links capsule */}
+          <div
+            className="hidden md:flex"
+            style={{
+              ...capsuleBase,
+              gap: "2px",
+              padding: "7px 8px",
+              background: "rgba(20,20,24,0.72)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.45)",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
             }}
           >
-            ROOM
-          </span>
-        </Link>
+            {allLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`nav-link-item${pathname === href ? " active" : ""}`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-1">
-          {allLinks.map(({ href, label }) => {
-            const isActive = pathname === href;
-            return (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className="relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    color: isActive
-                      ? "#ededed"
-                      : "rgba(255,255,255,0.45)",
-                    backgroundColor: isActive
-                      ? "rgba(255,255,255,0.06)"
-                      : "transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      (e.currentTarget as HTMLElement).style.color = "#ededed";
-                      (e.currentTarget as HTMLElement).style.backgroundColor =
-                        "rgba(255,255,255,0.04)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      (e.currentTarget as HTMLElement).style.color =
-                        "rgba(255,255,255,0.45)";
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                    }
-                  }}
-                >
-                  {label}
-                  {isActive && (
-                    <span
-                      className="absolute bottom-0 left-3 right-3 h-px rounded-full"
-                      style={{ backgroundColor: "#00F2FF" }}
-                    />
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+          {/* RIGHT — Sign In transparent capsule */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {isLoaded && isSignedIn && (
+              <div style={{
+                ...capsuleBase,
+                padding: "5px",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                <UserButton
+                  appearance={{ elements: { userButtonAvatarBox: "w-8 h-8 border border-white/10" } }}
+                />
+              </div>
+            )}
+            {isLoaded && !isSignedIn && (
+              <Link
+                href="/sign-in"
+                className="hidden md:inline-flex items-center justify-center"
+                style={{
+                  ...capsuleBase,
+                  height: "42px",
+                  padding: "0 22px",
+                  fontSize: "0.9rem",
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                  color: "rgba(255,255,255,0.65)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,242,255,0.35)";
+                  (e.currentTarget as HTMLElement).style.color = "#ededed";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(0,242,255,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)";
+                  (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+                }}
+              >
+                Sign in
+              </Link>
+            )}
 
-        {/* Right side — auth + mobile btn */}
-        <div className="flex items-center gap-3">
-          {isLoaded && isSignedIn && (
-            <UserButton
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "w-8 h-8 border border-white/10",
-                },
-              }}
-            />
-          )}
-          {isLoaded && !isSignedIn && (
-            <Link
-              href="/sign-in"
-              className="hidden md:inline-flex items-center justify-center h-9 px-4 rounded-full text-sm font-medium transition-all duration-200"
+            {/* Mobile hamburger */}
+            <button
+              id="mobile-menu-btn"
+              type="button"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMenuOpen((o) => !o)}
+              className="flex md:hidden h-10 w-10 items-center justify-center rounded-full transition-all duration-200"
               style={{
-                fontFamily: "'Inter', sans-serif",
-                border: "1.5px solid rgba(255,255,255,0.12)",
                 color: "rgba(255,255,255,0.6)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,242,255,0.35)";
-                (e.currentTarget as HTMLElement).style.color = "#ededed";
-                (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(0,242,255,0.04)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)";
-                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.6)";
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.04)",
               }}
             >
-              Sign in
-            </Link>
-          )}
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
 
-          {/* Mobile hamburger */}
+        {/* ── SCROLLED STATE: single centered capsule ──────────── */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "14px 28px",
+            pointerEvents: "auto",
+            opacity: scrolled ? 1 : 0,
+            transform: scrolled ? "translateY(0)" : "translateY(-12px)",
+            transition: "opacity 0.4s ease, transform 0.4s ease",
+            visibility: scrolled ? "visible" : "hidden",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+          }}
+        >
+          <div
+            className="scrolled-capsule hidden md:flex"
+            style={{
+              ...capsuleBase,
+              gap: "2px",
+              padding: "7px 10px",
+              background: "rgba(14,14,18,0.88)",
+              border: "1px solid rgba(255,255,255,0.1)",
+            }}
+          >
+            {/* Wordmark inside capsule */}
+            <Link
+              href="/"
+              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "1px", padding: "5px 12px" }}
+            >
+              <span style={{
+                fontFamily: "'Syne', system-ui, sans-serif",
+                fontWeight: 800,
+                fontSize: "1.15rem",
+                color: "#ededed",
+                letterSpacing: "-0.02em",
+              }}>
+                GEEK
+              </span>
+              <span style={{
+                fontFamily: "'Syne', system-ui, sans-serif",
+                fontWeight: 800,
+                fontSize: "1.15rem",
+                color: "#00F2FF",
+                letterSpacing: "-0.02em",
+              }}>
+                ROOM
+              </span>
+            </Link>
+
+            {/* Divider */}
+            <span style={{
+              width: "1px",
+              height: "20px",
+              background: "rgba(255,255,255,0.1)",
+              margin: "0 4px",
+              alignSelf: "center",
+              flexShrink: 0,
+            }} />
+
+            {/* Nav links */}
+            {allLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`nav-link-item${pathname === href ? " active" : ""}`}
+              >
+                {label}
+              </Link>
+            ))}
+
+            {/* Divider */}
+            <span style={{
+              width: "1px",
+              height: "20px",
+              background: "rgba(255,255,255,0.1)",
+              margin: "0 4px",
+              alignSelf: "center",
+              flexShrink: 0,
+            }} />
+
+            {/* Sign In / UserButton */}
+            {isLoaded && isSignedIn && (
+              <div style={{ padding: "3px 6px" }}>
+                <UserButton
+                  appearance={{ elements: { userButtonAvatarBox: "w-7 h-7 border border-white/10" } }}
+                />
+              </div>
+            )}
+            {isLoaded && !isSignedIn && (
+              <Link
+                href="/sign-in"
+                style={{
+                  ...capsuleBase,
+                  height: "36px",
+                  padding: "0 18px",
+                  fontSize: "0.875rem",
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                  color: "rgba(255,255,255,0.65)",
+                  background: "rgba(0,242,255,0.07)",
+                  border: "1px solid rgba(0,242,255,0.2)",
+                  textDecoration: "none",
+                  margin: "0 2px",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(0,242,255,0.12)";
+                  (e.currentTarget as HTMLElement).style.color = "#ededed";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(0,242,255,0.07)";
+                  (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)";
+                }}
+              >
+                Sign in
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile hamburger (visible when scrolled on mobile) */}
           <button
-            id="mobile-menu-btn"
             type="button"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl transition-all duration-200"
+            className="flex md:hidden h-10 w-10 items-center justify-center rounded-full transition-all duration-200 ml-auto"
             style={{
               color: "rgba(255,255,255,0.6)",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#ededed";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.16)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.6)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(14,14,18,0.88)",
             }}
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-      </nav>
 
-      {/* Mobile nav dropdown */}
-      <div
-        id="mobile-nav"
-        aria-hidden={!menuOpen}
-        className="md:hidden overflow-hidden transition-all duration-300"
-        style={{
-          maxHeight: menuOpen ? "100vh" : "0",
-          opacity: menuOpen ? 1 : 0,
-          borderTop: menuOpen ? "1px solid rgba(255,255,255,0.06)" : "none",
-          backgroundColor: "rgba(14,14,18,0.95)",
-        }}
-      >
-        <ul className="flex flex-col px-6 py-4 gap-1">
-          {allLinks.map(({ href, label }) => {
-            const isActive = pathname === href;
-            return (
-              <li key={href}>
+        {/* ── Mobile nav dropdown ───────────────────────────────── */}
+        <div
+          id="mobile-nav"
+          aria-hidden={!menuOpen}
+          className="md:hidden overflow-hidden transition-all duration-300"
+          style={{
+            maxHeight: menuOpen ? "100vh" : "0",
+            opacity: menuOpen ? 1 : 0,
+            marginTop: "60px",
+            background: "rgba(14,14,18,0.97)",
+            borderTop: menuOpen ? "1px solid rgba(255,255,255,0.06)" : "none",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            pointerEvents: "auto",
+          }}
+        >
+          <ul className="flex flex-col px-6 py-4 gap-1">
+            {allLinks.map(({ href, label }) => {
+              const isActive = pathname === href;
+              return (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center px-3 py-3 rounded-xl text-base font-medium transition-all duration-200"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      color: isActive ? "#ededed" : "rgba(255,255,255,0.45)",
+                      backgroundColor: isActive ? "rgba(255,255,255,0.05)" : "transparent",
+                      borderLeft: isActive ? "2px solid #00F2FF" : "2px solid transparent",
+                    }}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              );
+            })}
+            {isLoaded && !isSignedIn && (
+              <li className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                 <Link
-                  href={href}
+                  href="/sign-in"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center px-3 py-3 rounded-xl text-base font-medium transition-all duration-200"
+                  className="flex items-center justify-center w-full px-4 py-3 rounded-xl text-base font-medium transition-all duration-200"
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    color: isActive ? "#ededed" : "rgba(255,255,255,0.45)",
-                    backgroundColor: isActive ? "rgba(255,255,255,0.05)" : "transparent",
-                    borderLeft: isActive ? "2px solid #00F2FF" : "2px solid transparent",
+                    border: "1.5px solid rgba(255,255,255,0.12)",
+                    color: "rgba(255,255,255,0.65)",
                   }}
                 >
-                  {label}
+                  Sign in
                 </Link>
               </li>
-            );
-          })}
-          {isLoaded && !isSignedIn && (
-            <li className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              <Link
-                href="/sign-in"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-center w-full px-4 py-3 rounded-xl text-base font-medium transition-all duration-200"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  border: "1.5px solid rgba(255,255,255,0.12)",
-                  color: "rgba(255,255,255,0.65)",
-                }}
+            )}
+            {isLoaded && isSignedIn && (
+              <li
+                className="mt-3 pt-3 flex justify-center"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
               >
-                Sign in
-              </Link>
-            </li>
-          )}
-          {isLoaded && isSignedIn && (
-            <li className="mt-3 pt-3 flex justify-center" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-10 h-10" } }} />
-            </li>
-          )}
-        </ul>
-      </div>
-    </header>
+                <UserButton appearance={{ elements: { userButtonAvatarBox: "w-10 h-10" } }} />
+              </li>
+            )}
+          </ul>
+        </div>
+      </header>
+    </>
   );
 }
