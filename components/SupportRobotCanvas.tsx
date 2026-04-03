@@ -195,7 +195,14 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
         return new Float32Array([m[0],m[1],m[2], m[4],m[5],m[6], m[8],m[9],m[10]]);
     }
 
-    function createMesh(vertices: number[], normals: number[], indices: number[]) {
+    interface WebGLMesh {
+        vBuf: WebGLBuffer | null;
+        nBuf: WebGLBuffer | null;
+        iBuf: WebGLBuffer | null;
+        count: number;
+    }
+
+    function createMesh(vertices: number[], normals: number[], indices: number[]): WebGLMesh {
         const vBuf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, vBuf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -247,7 +254,7 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
                 let pz = Math.sin(theta) * Math.sin(phi);
                 
                 const power = 3.5;
-                let nx = px, ny = py, nz = pz;
+                const nx = px, ny = py, nz = pz;
                 px = Math.sign(px) * Math.pow(Math.abs(px), 1/power) * w/2;
                 py = Math.sign(py) * Math.pow(Math.abs(py), 1/power) * h/2;
                 pz = Math.sign(pz) * Math.pow(Math.abs(pz), 1/power) * d/2;
@@ -329,7 +336,7 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
         return createMesh(verts, norms, indices);
     }
 
-    function drawMesh(mesh: any, modelMatrix: Float32Array, color: number[], emissive: number[], metallic: number, roughness: number, opacity: number) {
+    function drawMesh(mesh: WebGLMesh, modelMatrix: Float32Array, color: number[], emissive?: number[], metallic?: number, roughness?: number, opacity?: number) {
         gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vBuf);
         gl.enableVertexAttribArray(locs.aPos as number);
         gl.vertexAttribPointer(locs.aPos as number, 3, gl.FLOAT, false, 0, 0);
@@ -369,22 +376,24 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
     const headBolt = createCylinder(0.07, 0.07, 0.15, 8);
     const visorMesh = createRoundedBox(1.6, 0.7, 0.3, 0.1, 14);
 
-    let expressionT = 0, blinkTimer = 0, blinkState = 0, blinkAmount = 0, idleTimer = 0;
+    let blinkTimer = 0, blinkState = 0, blinkAmount = 0;
     let lookX = 0, lookY = 0, targetLookX = 0, targetLookY = 0;
     let headTiltX = 0, headTiltY = 0, headTiltZ = 0;
     let targetHeadTiltX = 0, targetHeadTiltY = 0, targetHeadTiltZ = 0;
-    let mouthOpen = 0, targetMouthOpen = 0;
-    let eyebrowL = 0, eyebrowR = 0, targetEyebrowL = 0, targetEyebrowR = 0;
-    let eyeScale = 1, targetEyeScale = 1;
-    let pupilScale = 1, targetPupilScale = 1;
-    let cheekGlow = 0, targetCheekGlow = 0;
-    let jawOffset = 0, targetJawOffset = 0;
-    let squintL = 0, squintR = 0, targetSquintL = 0, targetSquintR = 0;
-    // We can default to somewhat happy/engaged
-    targetEyebrowL = 0.15; targetEyebrowR = 0.15;
-    targetMouthOpen = 0.12; targetEyeScale = 0.85; 
-    targetPupilScale = 1.1; targetCheekGlow = 1;
-    targetJawOffset = -0.06; targetSquintL = 0.3; targetSquintR = 0.3;
+    let mouthOpen = 0;
+    const targetMouthOpen = 0.12;
+    let eyebrowL = 0, eyebrowR = 0;
+    const targetEyebrowL = 0.15, targetEyebrowR = 0.15;
+    let eyeScale = 1;
+    const targetEyeScale = 0.85;
+    let pupilScale = 1;
+    const targetPupilScale = 1.1;
+    let cheekGlow = 0;
+    const targetCheekGlow = 1;
+    let jawOffset = 0;
+    const targetJawOffset = -0.06;
+    let squintL = 0, squintR = 0;
+    const targetSquintL = 0.3, targetSquintR = 0.3;
 
     function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
 
@@ -403,7 +412,6 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
         squintL = lerp(squintL, targetSquintL, smoothing);
         squintR = lerp(squintR, targetSquintR, smoothing);
 
-        idleTimer += 0.016;
         const idleBob = Math.sin(t * 1.2) * 0.08;
         const idleSway = Math.sin(t * 0.7) * 0.04;
         const breathe = Math.sin(t * 2.0) * 0.015;
@@ -566,11 +574,11 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
         centerAnt = mat4Scale(centerAnt, [0.8, 1.2, 0.8]);
         drawMesh(antennaMesh, centerAnt, [0.12, 0.12, 0.15], [0, 0, 0], 0.9, 0.2, 1.0);
         
-        let centerBall = mat4Translate(base, [0, 1.75, 0]);
-        const cGlow = Math.sin(t * 2) * 0.5 + 0.5;
-        // Make center antenna glow blueish
-        drawMesh(antennaBall, centerBall, [0.1, 0.5, 0.8], [0, cGlow * 0.6, cGlow], 0.1, 0.3, 1.0);
-
+            const centerBall = mat4Translate(base, [0, 1.75, 0]);
+            const cGlow = Math.sin(t * 2) * 0.5 + 0.5;
+            // Make center antenna glow blueish
+            drawMesh(antennaBall, centerBall, [0.1, 0.5, 0.8], [0, cGlow * 0.6, cGlow], 0.1, 0.3, 1.0);
+    
         for (let side = -1; side <= 1; side += 2) {
             let ear = mat4Translate(base, [side * 1.25, 0.1, 0]);
             ear = mat4Scale(ear, [0.8, 1, 0.8]);
@@ -609,7 +617,7 @@ export function SupportRobotCanvas({ className = "" }: { className?: string }) {
         jaw = mat4Scale(jaw, [0.95, 1, 0.95]);
         drawMesh(jawMesh, jaw, [0.09, 0.09, 0.14], [0, 0, 0], 0.8, 0.3, 1.0);
 
-        let neck = mat4Translate(base, [0, -1.15, 0]);
+        const neck = mat4Translate(base, [0, -1.15, 0]);
         drawMesh(neckMesh, neck, [0.08, 0.08, 0.12], [0, 0, 0], 0.8, 0.3, 1.0);
 
         for (let i = 0; i < 3; i++) {

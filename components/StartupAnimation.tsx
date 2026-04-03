@@ -8,7 +8,7 @@ export default function StartupAnimation() {
   useEffect(() => {
     // Only show once per session to not annoy returning users, or comment out for development
     if (sessionStorage.getItem("homeAnimationPlayed")) {
-      setShow(false);
+      setTimeout(() => setShow(false), 0);
       return;
     }
     document.body.style.overflow = "hidden";
