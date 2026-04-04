@@ -209,29 +209,61 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
       `}} />
 
 
-      <section className="team-hero">
-        <div className="hero-bg">
-          <div className="hero-gradient-1"></div>
-          <div className="hero-gradient-2"></div>
-          <div className="hero-gradient-3"></div>
-        </div>
-        <div className="hero-content">
-          <div className="relative inline-flex flex-col items-center justify-center mb-8 text-center w-full max-w-[90vw] mx-auto">
+      <section className="team-hero relative flex flex-col items-center justify-center min-h-[90vh]">
+
+        
+        <div className="hero-content flex flex-col items-center justify-center w-full relative z-10 mt-16">
+          {/* Top Crew Badge */}
+          <div className="flex items-center gap-2 justify-center mb-8">
+            <div className="flex items-center gap-3 px-5 py-2 rounded-full border border-[#00c8ff]/20 bg-[#00c8ff]/5 shadow-[0_0_15px_rgba(0,200,255,0.05)] backdrop-blur-sm">
+              <div className="w-2 h-2 rounded-full bg-[#00c8ff] animate-pulse" />
+              <span className="text-[#00c8ff] text-[11px] font-mono font-medium tracking-[0.2em] uppercase">Crew — Loaded</span>
+            </div>
+          </div>
+
+          {/* Main Title */}
+          <div className="relative inline-flex flex-col items-center justify-center mb-6 text-center w-full max-w-[90vw] mx-auto">
             <h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight flex items-center justify-center whitespace-nowrap"
-              style={{ fontFamily: "'Syne', system-ui, sans-serif" }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-bold tracking-tight flex items-center justify-center whitespace-nowrap"
+              style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
             >
-              <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-2 sm:gap-4">
-                <span className="text-[#00c8ff] opacity-90">{'<'}</span>
+              <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-3">
+                <span className="text-[#00c8ff] font-medium opacity-90 mx-1">{'<'}</span>
                 <span>THE OG TEAM</span>
-                <span className="text-[#7f77dd] opacity-90">{'/>'}</span>
+                <span className="text-[#7f77dd] font-medium opacity-90 mx-1">{'/>'}</span>
               </span>
             </h1>
-            <div className="absolute -bottom-6 w-full max-w-sm h-px bg-gradient-to-r from-transparent via-[#00c8ff] to-transparent opacity-50" />
           </div>
-          <div className={`hero-dynamic-quote ${isQuoteFading ? 'fading' : ''}`}>
+
+          {/* Subtitle */}
+          <div className="mb-12 text-[#5a5a6a] font-bold uppercase tracking-[0.3em] text-xs sm:text-sm">
+            THE PEOPLE BEHIND THE CODE
+          </div>
+
+          {/* Overlapping Initials Row */}
+          <div className="flex items-center justify-center -space-x-4 mb-20">
+            {['SB', 'AK', 'RV', 'MJ', 'PR'].map((initials, i) => (
+              <div key={i} className="w-12 h-12 rounded-full flex items-center justify-center bg-[#081520] border border-[#00c8ff]/30 text-[#00c8ff] text-xs font-bold shadow-[0_0_15px_rgba(0,200,255,0.1)] z-10 hover:z-20 transition-transform hover:scale-110 cursor-default">
+                {initials}
+              </div>
+            ))}
+            <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#150d1e] border border-[#7f77dd]/30 text-[#7f77dd] text-xs font-bold shadow-[0_0_15px_rgba(127,119,221,0.1)] z-0 hover:z-20 transition-transform hover:scale-110 cursor-default">
+              +19
+            </div>
+          </div>
+
+          {/* Quote */}
+          {/* I'll use the dynamic quotes from state but style it like the screenshot to keep functionality while upgrading design */}
+          <div className={`font-mono text-[#00c8ff] text-sm md:text-base italic transition-all duration-500 max-w-2xl text-center px-6 ${isQuoteFading ? 'opacity-0 translate-y-2' : 'opacity-80 translate-y-0'}`}>
             {heroQuotes[heroQuoteIndex]}
           </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-6 justify-center w-full max-w-sm pointer-events-none opacity-50">
+          <div className="h-[1px] w-12 bg-gray-700"></div>
+          <span className="text-gray-500 font-mono text-[10px] tracking-[0.3em] uppercase">Scroll</span>
+          <div className="h-[1px] w-12 bg-gray-700"></div>
         </div>
       </section>
 
